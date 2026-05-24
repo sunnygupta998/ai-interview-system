@@ -113,14 +113,13 @@ const Login = () => {
           </button>
         </form>
 
-        <div style={{ margin: '20px 0', textAlign: 'center', position: 'relative' }}>
-          <hr style={{ border: 'none', borderTop: '1px solid var(--border-color)', margin: '15px 0' }} />
-          <span style={{ position: 'absolute', top: '5px', left: '50%', transform: 'translateX(-50%)', background: 'var(--card-bg)', padding: '0 10px', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-            OR
-          </span>
+        <div style={{ margin: '24px 0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.1)' }}></div>
+          <span style={{ padding: '0 15px', color: 'var(--text-secondary)', fontSize: '0.9rem', fontWeight: 500 }}>OR</span>
+          <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.1)' }}></div>
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '24px' }}>
           <GoogleLogin
             onSuccess={async (credentialResponse) => {
               setLoading(true);
