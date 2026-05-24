@@ -70,7 +70,7 @@ const VerifyEmail = () => {
   };
 
   return (
-    <div className="auth-container animate-fade">
+    <div className="auth-page-container animate-fade">
       <div className="auth-card glass-card">
         <h2>Verify Your Email</h2>
         <p style={{ textAlign: 'center', marginBottom: '2rem', color: 'var(--text-secondary)' }}>
