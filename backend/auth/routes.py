@@ -5,6 +5,9 @@ import random
 from datetime import datetime, timedelta
 from auth.middleware import generate_token, token_required
 from utils.email_service import send_otp_email
+from google.oauth2 import id_token
+from google.auth.transport import requests
+import os
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -184,3 +187,61 @@ def resend_verification():
         print(f"Failed to resend OTP: {e}")
         
     return jsonify({'message': 'A new verification code has been sent to your email.'}), 200
+
+@auth_bp.route('/google', methods=['POST'])
+def google_auth():
+    data = request.get_json() or {}
+    token = data.get('token')
+    role = data.get('role', 'candidate')
+    
+    if not token:
+        return jsonify({'message': 'Missing token'}), 400
+        
+    try:
+        # Verify the Google token
+        client_id = os.environ.get('VITE_GOOGLE_CLIENT_ID')
+        idinfo = id_token.verify_oauth2_token(token, requests.Request(), client_id)
+        
+        email = idinfo['email']
+        name = idinfo.get('name', '')
+        
+        client = MongoClient(current_app.config['MONGODB_URI'])
+        db = client[current_app.config['DB_NAME']]
+        
+        # Check if user exists
+        user = db.users.find_one({'email': email})
+        
+        if not user:
+            # Create user if they don't exist
+            user = {
+                'name': name,
+                'email': email,
+                'password_hash': b'', # No password for google accounts
+                'role': role,
+                'is_verified': True, # Google accounts are pre-verified
+                'created_at': datetime.utcnow()
+            }
+            result = db.users.insert_one(user)
+            user_id = str(result.inserted_id)
+        else:
+            user_id = str(user['_id'])
+            # Ensure they are marked as verified since they used Google
+            if not user.get('is_verified'):
+                db.users.update_one({'_id': user['_id']}, {'$set': {'is_verified': True}})
+                
+        # Generate our JWT token
+        jwt_token = generate_token(user_id, user.get('role', role), current_app.config['JWT_SECRET'])
+        
+        return jsonify({
+            'token': jwt_token,
+            'user': {
+                '_id': user_id,
+                'name': user.get('name', name),
+                'email': email,
+                'role': user.get('role', role)
+            }
+        }), 200
+        
+    except ValueError as e:
+        print(f"Google auth error: {e}")
+        return jsonify({'message': 'Invalid Google token'}), 401

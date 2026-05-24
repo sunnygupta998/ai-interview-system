@@ -44,6 +44,7 @@ export const authAPI = {
   getMe: () => API.get('/auth/me'),
   verifyEmail: (email, code) => API.post('/auth/verify-email', { email, code }),
   resendVerification: (email) => API.post('/auth/resend-verification', { email }),
+  googleLogin: (token, role) => API.post('/auth/google', { token, role }),
 };
 
 export const resumeAPI = {

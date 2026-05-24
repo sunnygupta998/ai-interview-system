@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { FiMail, FiLock, FiAlertCircle } from 'react-icons/fi';
+import { GoogleLogin } from '@react-oauth/google';
 import './Login.css';
 
 const Login = () => {
@@ -10,7 +11,7 @@ const Login = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   
-  const { login, user, token } = useAuth();
+  const { login, googleLogin, user, token } = useAuth();
   const navigate = useNavigate();
 
   // Redirect if already logged in
@@ -111,6 +112,40 @@ const Login = () => {
             {loading ? <div className="spinner-small"></div> : 'Login'}
           </button>
         </form>
+
+        <div style={{ margin: '20px 0', textAlign: 'center', position: 'relative' }}>
+          <hr style={{ border: 'none', borderTop: '1px solid var(--border-color)', margin: '15px 0' }} />
+          <span style={{ position: 'absolute', top: '5px', left: '50%', transform: 'translateX(-50%)', background: 'var(--card-bg)', padding: '0 10px', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+            OR
+          </span>
+        </div>
+
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <GoogleLogin
+            onSuccess={async (credentialResponse) => {
+              setLoading(true);
+              try {
+                const loggedInUser = await googleLogin(credentialResponse.credential);
+                if (loggedInUser.role === 'admin') {
+                  navigate('/admin/dashboard');
+                } else {
+                  navigate('/candidate/dashboard');
+                }
+              } catch (err) {
+                console.error(err);
+                setError(err.response?.data?.message || 'Google Login failed.');
+                setLoading(false);
+              }
+            }}
+            onError={() => {
+              setError('Google Login Failed');
+            }}
+            useOneTap
+            shape="rectangular"
+            theme="filled_black"
+            text="signin_with"
+          />
+        </div>
 
         <div className="auth-footer">
           <p>

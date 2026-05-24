@@ -83,8 +83,27 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const googleLogin = async (googleToken, role = 'candidate') => {
+    setLoading(true);
+    try {
+      const res = await authAPI.googleLogin(googleToken, role);
+      const { token: receivedToken, user: receivedUser } = res.data;
+      
+      localStorage.setItem('ai_interview_token', receivedToken);
+      localStorage.setItem('ai_interview_user', JSON.stringify(receivedUser));
+      
+      setToken(receivedToken);
+      setUser(receivedUser);
+      return receivedUser;
+    } catch (error) {
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, verifyLogin, register, logout }}>
+    <AuthContext.Provider value={{ user, token, loading, login, googleLogin, verifyLogin, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
