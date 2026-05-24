@@ -106,5 +106,3 @@ venv\Scripts\activate
 
 # 3. Start the Flask server
 python app.py
-Key to registor as admin
-supersecretadmin 
