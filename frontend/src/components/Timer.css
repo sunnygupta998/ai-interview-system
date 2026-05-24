@@ -1,0 +1,54 @@
+.test-timer {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px !important;
+  border-radius: var(--radius-md) !important;
+  font-weight: 700;
+  font-size: 1.2rem;
+  letter-spacing: 0.5px;
+  border-width: 1px;
+  border-style: solid;
+  box-shadow: none !important;
+}
+
+.timer-icon {
+  font-size: 1.3rem;
+}
+
+.timer-green {
+  background: rgba(0, 184, 148, 0.08);
+  border-color: rgba(0, 184, 148, 0.3);
+  color: var(--success);
+}
+
+.timer-yellow {
+  background: rgba(253, 203, 110, 0.08);
+  border-color: rgba(253, 203, 110, 0.3);
+  color: var(--warning);
+}
+
+.timer-red {
+  background: rgba(255, 118, 117, 0.08);
+  border-color: rgba(255, 118, 117, 0.3);
+  color: var(--error);
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 118, 117, 0.4);
+  }
+  50% {
+    transform: scale(1.03);
+    box-shadow: 0 0 15px 0 rgba(255, 118, 117, 0.2);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 118, 117, 0);
+  }
+}
+
+.timer-pulse {
+  animation: pulse 1s infinite ease-in-out;
+}

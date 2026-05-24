@@ -1,0 +1,157 @@
+.skills-analysis-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.skills-summary-header {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.candidate-meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+@media (max-width: 576px) {
+  .candidate-meta-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.meta-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.meta-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.value-domain {
+  color: var(--accent-light);
+}
+
+.value-domain svg {
+  color: var(--accent);
+}
+
+.value-exp {
+  color: var(--primary-light);
+}
+
+.candidate-summary {
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+}
+
+.candidate-summary h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.candidate-summary p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Skills Grid */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 768px) {
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.skills-category-card h4 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+  color: var(--text-primary);
+}
+
+.skills-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.skill-tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+}
+
+.skill-name {
+  color: var(--text-primary);
+}
+
+.proficiency-level {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  font-weight: 800;
+  opacity: 0.8;
+  padding-left: 4px;
+}
+
+.prof-icon {
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+/* Proficiency styling variations */
+.proficiency-advanced {
+  background: rgba(108, 92, 231, 0.08);
+  border-color: rgba(108, 92, 231, 0.2);
+  color: var(--primary-light);
+}
+
+.proficiency-advanced .prof-icon {
+  color: var(--primary);
+}
+
+.proficiency-intermediate {
+  background: rgba(253, 203, 110, 0.08);
+  border-color: rgba(253, 203, 110, 0.2);
+  color: var(--warning);
+}
+
+.proficiency-beginner {
+  background: rgba(0, 206, 201, 0.08);
+  border-color: rgba(0, 206, 201, 0.2);
+  color: var(--accent-light);
+}

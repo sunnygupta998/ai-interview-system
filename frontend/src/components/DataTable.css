@@ -1,0 +1,134 @@
+.datatable-wrapper {
+  width: 100%;
+}
+
+.table-search-bar {
+  position: relative;
+  margin-bottom: 16px;
+  max-width: 320px;
+}
+
+.table-search-input {
+  padding-left: 40px !important;
+  width: 100%;
+}
+
+.search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 1.1rem;
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: var(--bg-secondary);
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.95rem;
+}
+
+.custom-table th {
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text-secondary);
+  font-weight: 600;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  user-select: none;
+}
+
+.sortable-header {
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.sortable-header:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+}
+
+.header-cell-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sort-arrow {
+  font-size: 0.85rem;
+  color: var(--primary-light);
+}
+
+.custom-table td {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-primary);
+  vertical-align: middle;
+}
+
+.custom-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.clickable-row {
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.clickable-row:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.empty-table-row {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 40px !important;
+}
+
+/* Pagination */
+.table-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+  padding: 8px 4px;
+}
+
+@media (max-width: 576px) {
+  .table-pagination {
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+  }
+}
+
+.pagination-info {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.pagination-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-pagination {
+  padding: 8px 12px !important;
+  font-size: 0.9rem !important;
+}
+
+.current-page-indicator {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  padding: 0 4px;
+}

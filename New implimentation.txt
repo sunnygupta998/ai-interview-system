@@ -1,0 +1,21 @@
+1. Anti-Cheating & Proctoring (High Priority for Hiring)
+Tab-Switch Detection: If a candidate switches tabs during the MCQ test or live interview to Google an answer, the frontend can detect it (document.visibilityState) and auto-flag their result for the admin.
+Video Analytics: Periodically take snapshots from the webcam and run them through a lightweight model to ensure: 1) A face is actually present, and 2) There aren't multiple people in the frame helping the candidate.
+Copy/Paste Prevention: Disable Ctrl+C and Ctrl+V on the test page so candidates can't copy questions to ChatGPT.
+2. Cloud Storage for Resumes (Scalability)
+Currently, PDF resumes are saved in a local backend/uploads/ folder. If you deploy this to a cloud server (like AWS, Heroku, or Vercel), that local folder will get wiped out every time the server restarts.
+Suggestion: Integrate AWS S3 (or Google Cloud Storage / Firebase) to store the PDF files. The database would just save the cloud URL. This makes your backend completely "stateless" and infinitely scalable.
+3. Rate Limiting & API Cost Control (Security & Billing)
+Because your system makes calls to the Groq API, a malicious user could spam the "Generate Test" or "Start Interview" buttons, which could drain your API credits or get your account rate-limited.
+Suggestion: Implement Rate Limiting (e.g., max 5 tests generated per user per day).
+4. Real-Time WebSockets (Performance)
+Currently, the live interview sends the candidate's audio to the backend via standard HTTP requests. This works, but it can feel slightly delayed.
+Suggestion: Upgrade the live interview to use WebSockets (Socket.io). This creates a persistent connection, allowing the AI and the candidate to stream audio back and forth instantly. It even allows for "interruptions" (e.g., if the candidate starts talking while the AI is speaking, the AI can immediately stop).
+5. Automated Email Notifications (User Experience)
+Candidates currently have to log in to see if anything changed.
+Suggestion: Integrate an email service (like SendGrid or AWS SES). The system could automatically email candidates their login credentials when the admin registers them, or email the Admin whenever a candidate finishes a test.
+6. Granular AI Scoring Rubric (Business Logic)
+Right now, the AI gives a single overall score (0-100).
+Suggestion: Allow Admins to define a specific rubric in the settings. For example, instruct the AI to score the candidate on: Communication (20%), Technical Accuracy (50%), and Problem Solving (30%), and display this detailed breakdown on the Results chart.
+If any of these catch your eye, let me know! I can draw up an Implementation Plan to build them for you.
+

@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: ai-interview-backend
+    env: python
+    region: ohio
+    buildCommand: "cd backend && pip install -r requirements.txt"
+    startCommand: "cd backend && gunicorn app:app --worker-class eventlet -w 1 --bind 0.0.0.0:$PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.0
+      - key: FLASK_PORT
+        value: 5000
+      - key: GROQ_API_KEY
+        sync: false
+      - key: MONGODB_URI
+        sync: false
+      - key: DB_NAME
+        value: ai_interview_system
+      - key: JWT_SECRET
+        sync: false
+      - key: CLOUDINARY_URL
+        sync: false
+      - key: BREVO_API_KEY
+        sync: false
+      - key: BREVO_SENDER_EMAIL
+        sync: false
