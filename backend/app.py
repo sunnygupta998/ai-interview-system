@@ -1,3 +1,6 @@
+import gevent.monkey
+gevent.monkey.patch_all()
+
 import os
 from flask import Flask, jsonify
 from flask_cors import CORS
