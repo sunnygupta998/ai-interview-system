@@ -1,5 +1,4 @@
-import gevent.monkey
-gevent.monkey.patch_all()
+
 
 import os
 from flask import Flask, jsonify
@@ -74,6 +73,6 @@ def create_app():
 app = create_app()
 
 if __name__ == '__main__':
-    port = app.config.get('PORT', 5000)
+    port = int(os.environ.get("FLASK_PORT", 5000))
     print(f"Starting SocketIO server on port {port}...")
-    socketio.run(app, host='0.0.0.0', port=port, debug=True)
+    socketio.run(app, host='0.0.0.0', port=port, debug=True, allow_unsafe_werkzeug=True)

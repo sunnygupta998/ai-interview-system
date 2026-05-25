@@ -9,9 +9,7 @@ python-dotenv==1.1.0
 
 cloudinary==1.44.2
 sib-api-v3-sdk
-gunicorn==21.2.0
-gevent==23.9.1
-gevent-websocket==0.10.1
+
 Flask-SocketIO==5.3.6
 google-auth==2.23.3
 requests==2.31.0
