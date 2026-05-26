@@ -13,3 +13,5 @@ sib-api-v3-sdk
 Flask-SocketIO==5.3.6
 google-auth==2.23.3
 requests==2.31.0
+gunicorn==21.2.0
+geventwebsocket==0.10.1
