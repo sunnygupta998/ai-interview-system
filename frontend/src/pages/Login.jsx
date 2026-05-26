@@ -124,8 +124,9 @@ const Login = () => {
           <div style={{ flex: 1, height: '1px', background: 'var(--border)' }}></div>
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '24px' }}>
+        <div className="google-login-wrapper">
           <GoogleLogin
+            key={theme}
             onSuccess={async (credentialResponse) => {
               setLoading(true);
               try {
@@ -146,7 +147,7 @@ const Login = () => {
             }}
             useOneTap
             shape="rectangular"
-            theme="filled_black"
+            theme={theme === 'dark' ? 'filled_black' : 'outline'}
             text="signin_with"
           />
         </div>

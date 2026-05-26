@@ -92,3 +92,17 @@
   right: 20px;
   z-index: 1000;
 }
+
+/* Google Login button wrapper – clips the iframe white background */
+.google-login-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+[data-theme="dark"] .google-login-wrapper iframe {
+  border-radius: 8px;
+  color-scheme: normal;
+}
