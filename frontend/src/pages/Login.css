@@ -85,3 +85,10 @@
 .auth-footer a {
   font-weight: 600;
 }
+
+.floating-theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}

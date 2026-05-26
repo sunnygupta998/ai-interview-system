@@ -33,7 +33,7 @@
 
 .score-bg-circle {
   fill: none;
-  stroke: rgba(255, 255, 255, 0.04);
+  stroke: var(--border);
 }
 
 .score-fill-circle {
@@ -150,7 +150,7 @@
 
 .topic-bar-bg {
   height: 8px;
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--spinner-track);
   border-radius: 4px;
   overflow: hidden;
   width: 100%;
@@ -259,7 +259,7 @@
 .review-option {
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.01);
+  background: var(--bg-input);
   border: 1px solid var(--border);
   padding: 12px 16px;
   border-radius: var(--radius-md);
@@ -274,7 +274,7 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--btn-secondary-bg);
   font-weight: 700;
   font-size: 0.8rem;
   margin-right: 12px;
@@ -303,7 +303,7 @@
 }
 
 .opt-selected {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-input);
   border-color: rgba(255, 255, 255, 0.25);
   color: var(--text-primary);
 }
@@ -328,7 +328,7 @@
 }
 
 .review-explanation {
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--bg-input);
   border: 1px solid var(--border);
   padding: 16px;
   border-radius: var(--radius-md);

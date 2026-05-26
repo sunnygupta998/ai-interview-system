@@ -26,7 +26,7 @@
 .progress-bar-container {
   width: 100%;
   height: 4px;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--spinner-track);
   border-radius: 2px;
   margin-bottom: 24px;
   overflow: hidden;
@@ -127,7 +127,7 @@
   display: flex;
   align-items: center;
   text-align: left;
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--bg-input);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 12px 16px;
@@ -159,7 +159,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--btn-secondary-bg);
   font-weight: 700;
   margin-right: 16px;
   flex-shrink: 0;
@@ -208,7 +208,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--bg-input);
   border: 1px solid var(--border);
   color: var(--text-secondary);
   font-family: var(--font-sans);
@@ -221,7 +221,7 @@
 
 .nav-grid-btn:hover {
   border-color: rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--btn-secondary-bg);
 }
 
 .nav-grid-btn.active {
@@ -242,7 +242,7 @@
   flex-direction: column;
   gap: 8px;
   padding: 16px;
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--bg-input);
   border-radius: var(--radius-md);
   border: 1px solid var(--border);
   font-size: 0.85rem;
@@ -273,7 +273,7 @@
 }
 
 .legend-unanswered {
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--bg-input);
   border: 1px solid var(--border);
 }
 
@@ -289,7 +289,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(8, 7, 16, 0.8);
+  background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(8px);
   z-index: 200;
   display: flex;

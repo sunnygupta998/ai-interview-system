@@ -1,11 +1,13 @@
 import React from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { FiLogOut, FiUser, FiSettings, FiFileText, FiAward, FiPieChart } from 'react-icons/fi';
+import { useTheme } from '../context/ThemeContext';
+import { FiLogOut, FiUser, FiSettings, FiFileText, FiAward, FiPieChart, FiSun, FiMoon } from 'react-icons/fi';
 import './Navbar.css';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
@@ -56,6 +58,9 @@ const Navbar = () => {
         </div>
 
         <div className="navbar-profile">
+          <button onClick={toggleTheme} className="btn-theme-toggle" title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}>
+            {theme === 'dark' ? <FiSun /> : <FiMoon />}
+          </button>
           <div className="profile-info">
             <FiUser className="avatar-icon" />
             <div className="profile-details">

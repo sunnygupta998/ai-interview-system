@@ -38,7 +38,7 @@
 }
 
 .custom-table th {
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--bg-input);
   color: var(--text-secondary);
   font-weight: 600;
   padding: 16px 20px;
@@ -52,7 +52,7 @@
 }
 
 .sortable-header:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--btn-secondary-bg);
   color: var(--text-primary);
 }
 
@@ -84,7 +84,7 @@
 }
 
 .clickable-row:hover {
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--bg-input);
 }
 
 .empty-table-row {

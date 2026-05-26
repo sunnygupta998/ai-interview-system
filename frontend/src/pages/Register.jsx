@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { FiUser, FiMail, FiLock, FiAlertCircle } from 'react-icons/fi';
+import { useTheme } from '../context/ThemeContext';
+import { FiUser, FiMail, FiLock, FiAlertCircle, FiSun, FiMoon } from 'react-icons/fi';
 import { GoogleLogin } from '@react-oauth/google';
 import './Register.css';
 
@@ -16,6 +17,7 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
 
   const { register, googleLogin, user, token } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   // Redirect if already logged in
@@ -63,6 +65,9 @@ const Register = () => {
 
   return (
     <div className="auth-page-container">
+      <button onClick={toggleTheme} className="btn-theme-toggle floating-theme-toggle" title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}>
+        {theme === 'dark' ? <FiSun /> : <FiMoon />}
+      </button>
       <div className="auth-card glass-card animate-slide-up">
         <div className="auth-header">
           <h2>Create Account</h2>
@@ -197,9 +202,9 @@ const Register = () => {
         </form>
 
         <div style={{ margin: '24px 0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.1)' }}></div>
+          <div style={{ flex: 1, height: '1px', background: 'var(--border)' }}></div>
           <span style={{ padding: '0 15px', color: 'var(--text-secondary)', fontSize: '0.9rem', fontWeight: 500 }}>OR</span>
-          <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.1)' }}></div>
+          <div style={{ flex: 1, height: '1px', background: 'var(--border)' }}></div>
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '24px' }}>
