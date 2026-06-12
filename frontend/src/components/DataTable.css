@@ -2,10 +2,19 @@
   width: 100%;
 }
 
+.table-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
 .table-search-bar {
   position: relative;
-  margin-bottom: 16px;
   max-width: 320px;
+  flex: 1;
 }
 
 .table-search-input {
@@ -22,12 +31,65 @@
   font-size: 1.1rem;
 }
 
+/* Rows per page selector */
+.rows-per-page-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.rows-per-page-selector label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+.rows-per-page-select {
+  background: var(--bg-input);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md, 8px);
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  -webkit-appearance: auto;
+  appearance: auto;
+}
+
+.rows-per-page-select:hover {
+  border-color: var(--primary-light);
+}
+
+.rows-per-page-select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(var(--primary-rgb, 99, 102, 241), 0.15);
+}
+
+/* Loading overlay */
 .table-container {
   width: 100%;
   overflow-x: auto;
   border-radius: var(--radius-lg);
   border: 1px solid var(--border);
   background: var(--bg-secondary);
+  position: relative;
+}
+
+.table-loading-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(2px);
 }
 
 .custom-table {
@@ -103,6 +165,19 @@
 }
 
 @media (max-width: 576px) {
+  .table-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .table-search-bar {
+    max-width: 100%;
+  }
+
+  .rows-per-page-selector {
+    justify-content: flex-end;
+  }
+
   .table-pagination {
     flex-direction: column;
     gap: 16px;
@@ -132,3 +207,4 @@
   color: var(--text-secondary);
   padding: 0 4px;
 }
+

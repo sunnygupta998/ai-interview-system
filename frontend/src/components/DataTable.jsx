@@ -1,24 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FiChevronLeft, FiChevronRight, FiChevronsLeft, FiChevronsRight, FiSearch, FiArrowUp, FiArrowDown } from 'react-icons/fi';
 import './DataTable.css';
+
+const ROWS_PER_PAGE_OPTIONS = [5, 10, 25, 50, 100];
 
 const DataTable = ({ 
   columns, 
   data, 
   onRowClick, 
   searchPlaceholder = "Search...",
-  searchKey = "" // key path to search by, e.g., "candidate.name"
+  searchKey = "", // key path to search by, e.g., "candidate.name"
+  // Server-side pagination props
+  serverPagination = false,
+  totalRecords = 0,
+  totalPages: serverTotalPages = 0,
+  currentServerPage = 1,
+  serverRowsPerPage = 10,
+  onPageChange,        // (page) => void
+  onRowsPerPageChange, // (rowsPerPage) => void
+  loading = false
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   // Helper to resolve nested object path values
   const getNestedValue = (obj, path) => {
     return path.split('.').reduce((acc, part) => acc && acc[part], obj);
   };
 
+  // --- Client-side mode logic ---
   // 1. Search filter
   const filteredData = data.filter((row) => {
     if (!searchKey) return true;
@@ -56,39 +68,82 @@ const DataTable = ({
     return 0;
   });
 
-  // 3. Pagination
-  const indexOfLastRow = currentPage * rowsPerPage;
-  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
-  const currentRows = sortedData.slice(indexOfFirstRow, indexOfLastRow);
-  const totalPages = Math.ceil(sortedData.length / rowsPerPage);
+  // 3. Pagination (resolved for client vs server mode)
+  const isServer = serverPagination;
+  const activePage = isServer ? currentServerPage : currentPage;
+  const activeRowsPerPage = isServer ? serverRowsPerPage : rowsPerPage;
+  const totalPages = isServer ? serverTotalPages : Math.ceil(sortedData.length / rowsPerPage);
+  const totalCount = isServer ? totalRecords : sortedData.length;
+
+  const indexOfLastRow = activePage * activeRowsPerPage;
+  const indexOfFirstRow = indexOfLastRow - activeRowsPerPage;
+  const currentRows = isServer ? data : sortedData.slice(indexOfFirstRow, indexOfLastRow);
 
   const paginate = (pageNumber) => {
     if (pageNumber >= 1 && pageNumber <= totalPages) {
-      setCurrentPage(pageNumber);
+      if (isServer) {
+        onPageChange && onPageChange(pageNumber);
+      } else {
+        setCurrentPage(pageNumber);
+      }
     }
   };
 
+  const handleRowsPerPageChange = (newValue) => {
+    const val = parseInt(newValue, 10);
+    if (isServer) {
+      onRowsPerPageChange && onRowsPerPageChange(val);
+    } else {
+      setRowsPerPage(val);
+      setCurrentPage(1);
+    }
+  };
+
+  // Reset client page when search changes
+  useEffect(() => {
+    if (!isServer) {
+      setCurrentPage(1);
+    }
+  }, [searchTerm]);
+
   return (
     <div className="datatable-wrapper animate-fade">
-      {/* Search Bar */}
-      {searchKey && (
-        <div className="table-search-bar">
-          <FiSearch className="search-icon" />
-          <input 
-            type="text" 
-            placeholder={searchPlaceholder}
-            value={searchTerm}
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
-              setCurrentPage(1); // Reset page to 1 on search
-            }}
-            className="form-input table-search-input"
-          />
+      {/* Toolbar: Search + Rows per page */}
+      <div className="table-toolbar">
+        {searchKey && (
+          <div className="table-search-bar">
+            <FiSearch className="search-icon" />
+            <input 
+              type="text" 
+              placeholder={searchPlaceholder}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="form-input table-search-input"
+            />
+          </div>
+        )}
+        <div className="rows-per-page-selector">
+          <label htmlFor="rowsPerPage">Rows per page:</label>
+          <select 
+            id="rowsPerPage"
+            value={activeRowsPerPage}
+            onChange={(e) => handleRowsPerPageChange(e.target.value)}
+            className="rows-per-page-select"
+          >
+            {ROWS_PER_PAGE_OPTIONS.map(opt => (
+              <option key={opt} value={opt}>{opt}</option>
+            ))}
+          </select>
         </div>
-      )}
+      </div>
 
       {/* Table Container */}
       <div className="table-container">
+        {loading && (
+          <div className="table-loading-overlay">
+            <div className="spinner" style={{ width: 28, height: 28 }}></div>
+          </div>
+        )}
         <table className="custom-table">
           <thead>
             <tr>
@@ -112,7 +167,7 @@ const DataTable = ({
             {currentRows.length > 0 ? (
               currentRows.map((row, idx) => (
                 <tr 
-                  key={row.id || idx}
+                  key={row.id || row.result_id || idx}
                   onClick={() => onRowClick && onRowClick(row)}
                   className={onRowClick ? 'clickable-row' : ''}
                 >
@@ -126,7 +181,7 @@ const DataTable = ({
             ) : (
               <tr>
                 <td colSpan={columns.length} className="empty-table-row">
-                  No records found.
+                  {loading ? 'Loading...' : 'No records found.'}
                 </td>
               </tr>
             )}
@@ -138,31 +193,31 @@ const DataTable = ({
       {totalPages > 1 && (
         <div className="table-pagination">
           <span className="pagination-info">
-            Showing {indexOfFirstRow + 1} to {Math.min(indexOfLastRow, sortedData.length)} of {sortedData.length} records
+            Showing {indexOfFirstRow + 1} to {Math.min(indexOfLastRow, totalCount)} of {totalCount} records
           </span>
           <div className="pagination-buttons">
             <button 
               onClick={() => paginate(1)} 
-              disabled={currentPage === 1}
+              disabled={activePage === 1}
               className="btn btn-secondary btn-pagination"
               title="First Page"
             >
               <FiChevronsLeft />
             </button>
             <button 
-              onClick={() => paginate(currentPage - 1)} 
-              disabled={currentPage === 1}
+              onClick={() => paginate(activePage - 1)} 
+              disabled={activePage === 1}
               className="btn btn-secondary btn-pagination"
               title="Previous Page"
             >
               <FiChevronLeft />
             </button>
             <span className="current-page-indicator">
-              Page {currentPage} of {totalPages}
+              Page {activePage} of {totalPages}
             </span>
             <button 
-              onClick={() => paginate(currentPage + 1)} 
-              disabled={currentPage === totalPages}
+              onClick={() => paginate(activePage + 1)} 
+              disabled={activePage === totalPages}
               className="btn btn-secondary btn-pagination"
               title="Next Page"
             >
@@ -170,7 +225,7 @@ const DataTable = ({
             </button>
             <button 
               onClick={() => paginate(totalPages)} 
-              disabled={currentPage === totalPages}
+              disabled={activePage === totalPages}
               className="btn btn-secondary btn-pagination"
               title="Last Page"
             >

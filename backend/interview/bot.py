@@ -1,16 +1,27 @@
 from groq import Groq
+import google.generativeai as genai
 import json
 from flask import current_app
 
 def _get_client():
+    """Returns a configured Groq client for real-time interview functions."""
     api_key = current_app.config.get('GROQ_API_KEY')
     if not api_key:
         raise ValueError("GROQ_API_KEY is not configured in backend settings.")
     return Groq(api_key=api_key)
 
+def _get_gemini_model():
+    """Returns a configured Gemini model for quality-critical functions."""
+    api_key = current_app.config.get('GEMINI_API_KEY')
+    if not api_key:
+        return None
+    genai.configure(api_key=api_key)
+    return genai.GenerativeModel('gemini-2.0-flash')
+
 def transcribe_audio(audio_bytes, language='English'):
     """
     Transcribes an audio file using Groq's Whisper API.
+    Stays on Groq for ultra-fast real-time transcription.
     """
     client = _get_client()
     try:
@@ -44,11 +55,11 @@ def transcribe_audio(audio_bytes, language='English'):
 
 def generate_first_question(resume_skills, domain, language='English'):
     """
-    Generates the first question for the live interview based on candidate's background.
+    Generates the first question for the live interview.
+    Stays on Groq for ultra-fast real-time response.
     """
     client = _get_client()
     
-    # Format language instructions
     lang_instruction = "Respond entirely in English."
     if language.lower() == 'hindi':
         lang_instruction = "Respond entirely in Hindi (written in Devanagari script)."
@@ -82,7 +93,8 @@ def generate_first_question(resume_skills, domain, language='English'):
 
 def generate_next_question(transcript, language='English'):
     """
-    Generates the next question based on the interview transcript so far.
+    Generates the next question based on the interview transcript.
+    Stays on Groq for ultra-fast real-time conversation.
     """
     client = _get_client()
     
@@ -94,7 +106,7 @@ def generate_next_question(transcript, language='English'):
 
     # Format transcript for prompt
     formatted_transcript = ""
-    for msg in transcript[-6:]: # Only send the last few messages for context window efficiency
+    for msg in transcript[-6:]:  # Only send the last few messages for context window efficiency
         role = "Interviewer" if msg['role'] == 'ai' else "Candidate"
         formatted_transcript += f"{role}: {msg['content']}\n"
 
@@ -124,12 +136,42 @@ def generate_next_question(transcript, language='English'):
             return "धन्यवाद। आपका अगला सवाल क्या है?"
         return "Thank you. Let's move on to the next topic. Can you explain your experience with databases?"
 
+def _evaluate_with_gemini(formatted_transcript, system_prompt):
+    """Try evaluating with Gemini (higher quality grading)."""
+    model = _get_gemini_model()
+    if not model:
+        raise ValueError("GEMINI_API_KEY not configured, skipping to Groq.")
+    
+    response = model.generate_content(
+        f"{system_prompt}\n\nInterview Transcript:\n{formatted_transcript}",
+        generation_config=genai.types.GenerationConfig(
+            temperature=0.3,
+            max_output_tokens=1000,
+            response_mime_type="application/json"
+        )
+    )
+    return json.loads(response.text)
+
+def _evaluate_with_groq(formatted_transcript, system_prompt):
+    """Fallback: evaluate with Groq Llama."""
+    client = _get_client()
+    response = client.chat.completions.create(
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": f"Interview Transcript:\n{formatted_transcript}"}
+        ],
+        model="llama-3.3-70b-versatile",
+        temperature=0.3,
+        max_completion_tokens=1000,
+        response_format={"type": "json_object"}
+    )
+    return json.loads(response.choices[0].message.content)
+
 def evaluate_interview(transcript, language='English'):
     """
     Evaluates the full interview transcript and makes a hiring decision.
+    Tries Gemini first (smarter grading), falls back to Groq if rate limited.
     """
-    client = _get_client()
-    
     # Format full transcript
     formatted_transcript = ""
     for msg in transcript:
@@ -154,22 +196,21 @@ def evaluate_interview(transcript, language='English'):
         "Ensure all scores are integers between 0 and 100. Always provide exactly 3 bullet points for strengths and weaknesses."
     )
 
+    # Try Gemini first (higher quality evaluation)
     try:
-        response = client.chat.completions.create(
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": f"Interview Transcript:\n{formatted_transcript}"}
-            ],
-            model="llama-3.3-70b-versatile",
-            temperature=0.3,
-            max_completion_tokens=1000,
-            response_format={"type": "json_object"}
-        )
-        
-        result_text = response.choices[0].message.content
-        return json.loads(result_text)
-    except Exception as e:
-        print(f"Error evaluating interview: {str(e)}")
+        result = _evaluate_with_gemini(formatted_transcript, system_prompt)
+        print("[OK] Interview evaluated with Gemini")
+        return result
+    except Exception as gemini_err:
+        print(f"[WARN] Gemini failed ({str(gemini_err)}), falling back to Groq...")
+
+    # Fallback to Groq
+    try:
+        result = _evaluate_with_groq(formatted_transcript, system_prompt)
+        print("[OK] Interview evaluated with Groq (fallback)")
+        return result
+    except Exception as groq_err:
+        print(f"[ERROR] Groq also failed: {str(groq_err)}")
         return {
             "technical_score": 0,
             "communication_score": 0,
@@ -185,16 +226,16 @@ def evaluate_interview(transcript, language='English'):
 def generate_speech(text, language='English'):
     """
     Generates speech audio from text using Groq TTS.
+    Stays on Groq for real-time voice generation.
     """
     client = _get_client()
     try:
         response = client.audio.speech.create(
             model="canopylabs/orpheus-v1-english",
-            voice="canopylabs/orpheus-v1-english",  # Use default orpheus voice
+            voice="canopylabs/orpheus-v1-english",
             input=text
         )
-        return response.content  # returns the binary audio data
+        return response.content
     except Exception as e:
         print(f"Error generating speech: {str(e)}")
         return None
-

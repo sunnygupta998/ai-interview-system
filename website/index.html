@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI Interview System — An AI-powered recruitment platform that scans resumes, generates custom technical assessments, conducts live AI interviews, and auto-grades candidates instantly. Built with Groq Llama 3.3 70B.">
+    <meta name="keywords" content="AI Interview, Resume Parser, Technical Assessment, MCQ Generator, AI Recruitment, Automated Hiring, Groq LLM, Live AI Interview">
+    <meta name="author" content="Sunny Gupta">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="AI Interview System — Intelligent Recruitment Platform">
+    <meta property="og:description" content="AI-powered resume parsing, custom MCQ generation, live AI interviews, and instant auto-grading for modern recruiting.">
+    <meta property="og:type" content="website">
+    <title>AI Interview System — Intelligent Recruitment Powered by AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- ============ NAVBAR ============ -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo" id="nav-logo">
+                <span class="logo-icon">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <defs>
+                            <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#a855f7"/>
+                                <stop offset="100%" style="stop-color:#06b6d4"/>
+                            </linearGradient>
+                        </defs>
+                        <rect width="32" height="32" rx="8" fill="url(#logoGrad)"/>
+                        <path d="M10 22V14L16 10L22 14V22L16 18L10 22Z" fill="white" opacity="0.9"/>
+                        <circle cx="16" cy="12" r="2" fill="white"/>
+                    </svg>
+                </span>
+                <span class="logo-text">AI Interview<span class="logo-dot">.</span></span>
+            </a>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="#features" class="nav-link" id="link-features">Features</a></li>
+                <li><a href="#how-it-works" class="nav-link" id="link-how">How It Works</a></li>
+                <li><a href="#tech-stack" class="nav-link" id="link-tech">Tech Stack</a></li>
+                <li><a href="#testimonials" class="nav-link" id="link-testimonials">Testimonials</a></li>
+                <li><a href="#pricing" class="nav-link" id="link-pricing">Pricing</a></li>
+                <li><a href="#contact" class="nav-link" id="link-contact">Contact</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark/light theme">
+                    <svg class="theme-icon theme-icon-sun" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <circle cx="10" cy="10" r="4" stroke="currentColor" stroke-width="2"/>
+                        <path d="M10 2V4M10 16V18M2 10H4M16 10H18M4.93 4.93L6.34 6.34M13.66 13.66L15.07 15.07M4.93 15.07L6.34 13.66M13.66 6.34L15.07 4.93" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <svg class="theme-icon theme-icon-moon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.003 8.003 0 1010.586 10.586z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <a href="#contact" class="btn btn-outline btn-sm" id="btn-demo">Request Demo</a>
+                <a href="#" class="btn btn-primary btn-sm" id="btn-get-started">Get Started</a>
+            </div>
+            <button class="hamburger" id="hamburger" aria-label="Toggle navigation menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobile-menu">
+            <ul class="mobile-links">
+                <li><a href="#features" class="mobile-link">Features</a></li>
+                <li><a href="#how-it-works" class="mobile-link">How It Works</a></li>
+                <li><a href="#tech-stack" class="mobile-link">Tech Stack</a></li>
+                <li><a href="#testimonials" class="mobile-link">Testimonials</a></li>
+                <li><a href="#pricing" class="mobile-link">Pricing</a></li>
+                <li><a href="#contact" class="mobile-link">Contact</a></li>
+            </ul>
+            <div class="mobile-actions">
+                <button class="theme-toggle theme-toggle-mobile" id="theme-toggle-mobile" aria-label="Toggle dark/light theme">
+                    <svg class="theme-icon theme-icon-sun" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <circle cx="10" cy="10" r="4" stroke="currentColor" stroke-width="2"/>
+                        <path d="M10 2V4M10 16V18M2 10H4M16 10H18M4.93 4.93L6.34 6.34M13.66 13.66L15.07 15.07M4.93 15.07L6.34 13.66M13.66 6.34L15.07 4.93" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <svg class="theme-icon theme-icon-moon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.003 8.003 0 1010.586 10.586z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="theme-toggle-label">Switch Theme</span>
+                </button>
+                <a href="#contact" class="btn btn-outline btn-full">Request Demo</a>
+                <a href="#" class="btn btn-primary btn-full">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ============ HERO SECTION ============ -->
+    <section class="hero" id="hero">
+        <div class="hero-bg-effects">
+            <div class="hero-orb hero-orb-1"></div>
+            <div class="hero-orb hero-orb-2"></div>
+            <div class="hero-orb hero-orb-3"></div>
+            <div class="hero-grid"></div>
+        </div>
+        <div class="container hero-content">
+            <div class="hero-text">
+                <div class="hero-badge" id="hero-badge">
+                    <span class="badge-dot"></span>
+                    Powered by Groq Llama 3.3 70B
+                </div>
+                <h1 class="hero-title" id="hero-title">
+                    Recruit Smarter with
+                    <span class="gradient-text">AI-Powered</span>
+                    Interviews
+                </h1>
+                <p class="hero-description" id="hero-description">
+                    Upload a resume. Our AI extracts skills, generates custom technical assessments, 
+                    conducts live voice interviews, and delivers instant grading — all in one platform.
+                </p>
+                <div class="hero-cta">
+                    <a href="#contact" class="btn btn-primary btn-lg" id="btn-hero-start">
+                        <span>Start Free Trial</span>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M4 10H16M16 10L11 5M16 10L11 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </a>
+                    <a href="#how-it-works" class="btn btn-ghost btn-lg" id="btn-hero-demo">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5"/>
+                            <path d="M8 7L13 10L8 13V7Z" fill="currentColor"/>
+                        </svg>
+                        <span>Watch Demo</span>
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-item" id="stat-accuracy">
+                        <span class="stat-number" data-target="95">0</span><span class="stat-suffix">%</span>
+                        <span class="stat-label">Accuracy</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item" id="stat-time">
+                        <span class="stat-number" data-target="80">0</span><span class="stat-suffix">%</span>
+                        <span class="stat-label">Time Saved</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item" id="stat-candidates">
+                        <span class="stat-number" data-target="10">0</span><span class="stat-suffix">K+</span>
+                        <span class="stat-label">Candidates</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-image-wrapper">
+                    <img src="images/hero-dashboard.png" alt="AI Interview System Dashboard showing resume analysis and assessment scores" class="hero-image" id="hero-image" loading="eager">
+                    <div class="hero-image-glow"></div>
+                </div>
+                <!-- Floating Cards -->
+                <div class="floating-card fc-1" id="float-card-1">
+                    <div class="fc-icon fc-green">
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                            <path d="M3 9L7 13L15 5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="fc-text">
+                        <span class="fc-title">Resume Parsed</span>
+                        <span class="fc-sub">12 skills extracted</span>
+                    </div>
+                </div>
+                <div class="floating-card fc-2" id="float-card-2">
+                    <div class="fc-icon fc-purple">
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                            <path d="M9 2L11 7H16L12 10.5L13.5 16L9 12.5L4.5 16L6 10.5L2 7H7L9 2Z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <div class="fc-text">
+                        <span class="fc-title">Score: 87/100</span>
+                        <span class="fc-sub">Passed ✓</span>
+                    </div>
+                </div>
+                <div class="floating-card fc-3" id="float-card-3">
+                    <div class="fc-icon fc-cyan">
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                            <circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="2"/>
+                            <path d="M9 5V9L12 11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <div class="fc-text">
+                        <span class="fc-title">Live Interview</span>
+                        <span class="fc-sub">AI conducting...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-scroll-indicator" id="scroll-indicator">
+            <span>Scroll to explore</span>
+            <svg width="16" height="24" viewBox="0 0 16 24" fill="none">
+                <rect x="1" y="1" width="14" height="22" rx="7" stroke="currentColor" stroke-width="1.5"/>
+                <circle cx="8" cy="8" r="2" fill="currentColor" class="scroll-dot"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- ============ TRUSTED BY ============ -->
+    <section class="trusted-by" id="trusted-by">
+        <div class="container">
+            <p class="trusted-label">Trusted by forward-thinking teams</p>
+            <div class="trusted-logos">
+                <div class="trusted-logo-item">
+                    <svg width="120" height="30" viewBox="0 0 120 30"><text x="0" y="22" fill="currentColor" font-family="Space Grotesk" font-weight="600" font-size="16">TechCorp</text></svg>
+                </div>
+                <div class="trusted-logo-item">
+                    <svg width="120" height="30" viewBox="0 0 120 30"><text x="0" y="22" fill="currentColor" font-family="Space Grotesk" font-weight="600" font-size="16">InnovateLab</text></svg>
+                </div>
+                <div class="trusted-logo-item">
+                    <svg width="120" height="30" viewBox="0 0 120 30"><text x="0" y="22" fill="currentColor" font-family="Space Grotesk" font-weight="600" font-size="16">DataFlow</text></svg>
+                </div>
+                <div class="trusted-logo-item">
+                    <svg width="120" height="30" viewBox="0 0 120 30"><text x="0" y="22" fill="currentColor" font-family="Space Grotesk" font-weight="600" font-size="16">CloudNine</text></svg>
+                </div>
+                <div class="trusted-logo-item">
+                    <svg width="120" height="30" viewBox="0 0 120 30"><text x="0" y="22" fill="currentColor" font-family="Space Grotesk" font-weight="600" font-size="16">NextGen AI</text></svg>
+                </div>
+                <div class="trusted-logo-item">
+                    <svg width="120" height="30" viewBox="0 0 120 30"><text x="0" y="22" fill="currentColor" font-family="Space Grotesk" font-weight="600" font-size="16">DevStack</text></svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ FEATURES SECTION ============ -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag" id="features-tag">Features</span>
+                <h2 class="section-title" id="features-title">Everything You Need to <span class="gradient-text">Hire Smarter</span></h2>
+                <p class="section-description">Our AI-driven platform automates every step of the technical interview process — from resume parsing to final scoring.</p>
+            </div>
+
+            <div class="features-grid">
+                <!-- Feature 1 -->
+                <div class="feature-card feature-card-large" id="feature-resume">
+                    <div class="feature-card-content">
+                        <div class="feature-icon-wrapper">
+                            <div class="feature-icon">
+                                <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                                    <path d="M7 3.5H17.5L23.5 9.5V24.5H7V3.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M17.5 3.5V9.5H23.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M11 15H19M11 19H16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <h3 class="feature-title">AI Resume Parser</h3>
+                        <p class="feature-description">Upload a PDF resume and our AI instantly extracts technical competencies, domain experience, years of expertise, and recommended assessment topics using Groq Llama 3.3 70B.</p>
+                        <div class="feature-tags">
+                            <span class="feature-tag">PDF Scanning</span>
+                            <span class="feature-tag">Skill Extraction</span>
+                            <span class="feature-tag">Experience Mapping</span>
+                        </div>
+                    </div>
+                    <div class="feature-card-image">
+                        <img src="images/feature-resume.png" alt="AI Resume Parser extracting skills from a document" loading="lazy">
+                    </div>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="feature-card" id="feature-mcq">
+                    <div class="feature-card-content">
+                        <div class="feature-icon-wrapper">
+                            <div class="feature-icon feature-icon-cyan">
+                                <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                                    <rect x="3.5" y="5" width="21" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M8 11H20M8 15H15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                    <circle cx="21" cy="18" r="3" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M19.5 18L20.5 19L22.5 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <h3 class="feature-title">Custom MCQ Engine</h3>
+                        <p class="feature-description">Dynamically generates tailored multiple-choice questions aligned with each candidate's extracted skills. Configurable difficulty mix: Easy, Medium, and Hard.</p>
+                    </div>
+                    <div class="feature-card-image feature-card-image-sm">
+                        <img src="images/feature-mcq.png" alt="Custom MCQ test interface" loading="lazy">
+                    </div>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="feature-card" id="feature-grading">
+                    <div class="feature-card-content">
+                        <div class="feature-icon-wrapper">
+                            <div class="feature-icon feature-icon-green">
+                                <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                                    <path d="M14 3.5L17.5 10.5L25 11.5L19.5 17L21 24.5L14 20.75L7 24.5L8.5 17L3 11.5L10.5 10.5L14 3.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <h3 class="feature-title">Auto-Grading & Breakdown</h3>
+                        <p class="feature-description">Instant score evaluation with pass/fail status and detailed topic-by-topic breakdowns. Visualized with clean charts for at-a-glance insights.</p>
+                    </div>
+                    <div class="feature-card-image feature-card-image-sm">
+                        <img src="images/feature-analytics.png" alt="Assessment results analytics dashboard" loading="lazy">
+                    </div>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="feature-card" id="feature-live">
+                    <div class="feature-card-content">
+                        <div class="feature-icon-wrapper">
+                            <div class="feature-icon feature-icon-rose">
+                                <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                                    <path d="M14 21C18.4183 21 22 17.4183 22 13V7L14 3.5L6 7V13C6 17.4183 9.58172 21 14 21Z" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M10 24.5C11.2 25.5 12.5 26 14 26C15.5 26 16.8 25.5 18 24.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                    <circle cx="11" cy="12" r="1.5" fill="currentColor"/>
+                                    <circle cx="17" cy="12" r="1.5" fill="currentColor"/>
+                                    <path d="M11.5 16C12.2 17 13 17.5 14 17.5C15 17.5 15.8 17 16.5 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <h3 class="feature-title">Live AI Interviews</h3>
+                        <p class="feature-description">Real-time voice-based interviews conducted by AI. The system asks follow-up questions, evaluates responses, and generates comprehensive interview reports.</p>
+                    </div>
+                </div>
+
+                <!-- Feature 5 -->
+                <div class="feature-card" id="feature-admin">
+                    <div class="feature-card-content">
+                        <div class="feature-icon-wrapper">
+                            <div class="feature-icon feature-icon-amber">
+                                <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                                    <circle cx="14" cy="10" r="4" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M6 24C6 19.5817 9.58172 16 14 16C18.4183 16 22 19.5817 22 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                    <path d="M21 8L23 10L27 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <h3 class="feature-title">Admin Controls</h3>
+                        <p class="feature-description">Full recruiter dashboard to adjust question counts, test durations, passing thresholds, and difficulty distributions. View all candidate results in one place.</p>
+                    </div>
+                </div>
+
+                <!-- Feature 6 -->
+                <div class="feature-card" id="feature-anti-cheat">
+                    <div class="feature-card-content">
+                        <div class="feature-icon-wrapper">
+                            <div class="feature-icon feature-icon-red">
+                                <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                                    <path d="M14 2L24.5 7V14C24.5 20.5 20 24.5 14 26C8 24.5 3.5 20.5 3.5 14V7L14 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M10 14L13 17L18 11" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <h3 class="feature-title">Anti-Cheating Proctoring</h3>
+                        <p class="feature-description">Tab-switch detection, webcam monitoring, and copy-paste prevention ensure integrity during assessments. Suspicious activity is auto-flagged for admin review.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ HOW IT WORKS ============ -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag" id="how-tag">How It Works</span>
+                <h2 class="section-title" id="how-title">From Resume to Results in <span class="gradient-text">4 Simple Steps</span></h2>
+                <p class="section-description">Our streamlined process takes candidates from PDF upload to fully graded assessment in minutes, not days.</p>
+            </div>
+            <div class="steps-container">
+                <div class="steps-line"></div>
+                <div class="step-item" id="step-1">
+                    <div class="step-number"><span>01</span></div>
+                    <div class="step-content">
+                        <h3 class="step-title">Upload Resume</h3>
+                        <p class="step-description">Candidates upload their resume in PDF format. The system accepts any standard resume layout.</p>
+                    </div>
+                    <div class="step-icon-visual">
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                            <circle cx="24" cy="24" r="22" stroke="url(#stepGrad1)" stroke-width="2" opacity="0.3"/>
+                            <path d="M16 30V32C16 33.1 16.9 34 18 34H30C31.1 34 32 33.1 32 32V30" stroke="url(#stepGrad1)" stroke-width="2.5" stroke-linecap="round"/>
+                            <path d="M24 14V26M24 14L19 19M24 14L29 19" stroke="url(#stepGrad1)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <defs><linearGradient id="stepGrad1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#a855f7"/><stop offset="100%" style="stop-color:#06b6d4"/></linearGradient></defs>
+                        </svg>
+                    </div>
+                </div>
+                <div class="step-item" id="step-2">
+                    <div class="step-number"><span>02</span></div>
+                    <div class="step-content">
+                        <h3 class="step-title">AI Skill Extraction</h3>
+                        <p class="step-description">Our Groq Llama 3.3 70B model scans the resume, identifying technical skills, domain expertise, and experience levels.</p>
+                    </div>
+                    <div class="step-icon-visual">
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                            <circle cx="24" cy="24" r="22" stroke="url(#stepGrad1)" stroke-width="2" opacity="0.3"/>
+                            <circle cx="24" cy="20" r="5" stroke="url(#stepGrad1)" stroke-width="2.5"/>
+                            <path d="M15 35C15 30.03 19.03 26 24 26C28.97 26 33 30.03 33 35" stroke="url(#stepGrad1)" stroke-width="2.5" stroke-linecap="round"/>
+                            <path d="M30 15L33 12M33 12H30M33 12V15" stroke="url(#stepGrad1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="step-item" id="step-3">
+                    <div class="step-number"><span>03</span></div>
+                    <div class="step-content">
+                        <h3 class="step-title">Take Assessment</h3>
+                        <p class="step-description">Custom MCQs and live AI interviews are generated based on extracted skills. Candidates complete them in a proctored environment.</p>
+                    </div>
+                    <div class="step-icon-visual">
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                            <circle cx="24" cy="24" r="22" stroke="url(#stepGrad1)" stroke-width="2" opacity="0.3"/>
+                            <rect x="14" y="14" width="20" height="20" rx="3" stroke="url(#stepGrad1)" stroke-width="2.5"/>
+                            <path d="M19 22H29M19 27H25" stroke="url(#stepGrad1)" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="30" cy="30" r="4" fill="#0a0a1a" stroke="url(#stepGrad1)" stroke-width="2"/>
+                            <path d="M28.5 30L29.5 31L31.5 29" stroke="url(#stepGrad1)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="step-item" id="step-4">
+                    <div class="step-number"><span>04</span></div>
+                    <div class="step-content">
+                        <h3 class="step-title">Instant Results</h3>
+                        <p class="step-description">Scores, pass/fail status, and topic breakdowns are generated immediately. Admins see full reports on their dashboard.</p>
+                    </div>
+                    <div class="step-icon-visual">
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                            <circle cx="24" cy="24" r="22" stroke="url(#stepGrad1)" stroke-width="2" opacity="0.3"/>
+                            <path d="M14 30L20 24L24 28L30 20L34 24" stroke="url(#stepGrad1)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="34" cy="24" r="2" fill="#a855f7"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ TECH STACK ============ -->
+    <section class="tech-stack" id="tech-stack">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag" id="tech-tag">Tech Stack</span>
+                <h2 class="section-title" id="tech-title">Built with <span class="gradient-text">Modern Technology</span></h2>
+                <p class="section-description">A robust, scalable architecture combining the best frontend, backend, and AI technologies.</p>
+            </div>
+            <div class="tech-grid">
+                <div class="tech-card" id="tech-react">
+                    <div class="tech-icon">⚛️</div>
+                    <h4 class="tech-name">React + Vite</h4>
+                    <p class="tech-desc">Lightning-fast frontend with HMR</p>
+                </div>
+                <div class="tech-card" id="tech-flask">
+                    <div class="tech-icon">🐍</div>
+                    <h4 class="tech-name">Flask (Python)</h4>
+                    <p class="tech-desc">RESTful API backend engine</p>
+                </div>
+                <div class="tech-card" id="tech-mongo">
+                    <div class="tech-icon">🍃</div>
+                    <h4 class="tech-name">MongoDB</h4>
+                    <p class="tech-desc">Flexible NoSQL data storage</p>
+                </div>
+                <div class="tech-card" id="tech-groq">
+                    <div class="tech-icon">🧠</div>
+                    <h4 class="tech-name">Groq LLM</h4>
+                    <p class="tech-desc">Llama 3.3 70B AI engine</p>
+                </div>
+                <div class="tech-card" id="tech-jwt">
+                    <div class="tech-icon">🔐</div>
+                    <h4 class="tech-name">JWT Auth</h4>
+                    <p class="tech-desc">Secure token authentication</p>
+                </div>
+                <div class="tech-card" id="tech-render">
+                    <div class="tech-icon">☁️</div>
+                    <h4 class="tech-name">Cloud Deploy</h4>
+                    <p class="tech-desc">Render / Vercel ready</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ TESTIMONIALS ============ -->
+    <section class="testimonials" id="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag" id="testimonials-tag">Testimonials</span>
+                <h2 class="section-title" id="testimonials-title">What Our Users <span class="gradient-text">Are Saying</span></h2>
+                <p class="section-description">Hear from recruiters and candidates who've transformed their hiring process.</p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card" id="testimonial-1">
+                    <div class="testimonial-stars">★★★★★</div>
+                    <p class="testimonial-text">"This system cut our screening time by 75%. The AI resume parser is incredibly accurate at identifying relevant skills, and the auto-generated assessments are perfectly calibrated."</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar" style="background: linear-gradient(135deg, #a855f7, #06b6d4);">RS</div>
+                        <div class="testimonial-info">
+                            <span class="testimonial-name">Rahul Sharma</span>
+                            <span class="testimonial-role">Head of Engineering, TechCorp</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card testimonial-card-featured" id="testimonial-2">
+                    <div class="testimonial-stars">★★★★★</div>
+                    <p class="testimonial-text">"The live AI interview feature is a game-changer. Candidates receive a genuine interview experience with intelligent follow-up questions. It's like having an expert interviewer available 24/7."</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar" style="background: linear-gradient(135deg, #f43f5e, #a855f7);">PK</div>
+                        <div class="testimonial-info">
+                            <span class="testimonial-name">Priya Krishnan</span>
+                            <span class="testimonial-role">CTO, InnovateLab</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card" id="testimonial-3">
+                    <div class="testimonial-stars">★★★★★</div>
+                    <p class="testimonial-text">"As a candidate, the experience was seamless. The questions were directly relevant to my resume skills, and I received my detailed breakdown instantly. Very impressive platform."</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar" style="background: linear-gradient(135deg, #06b6d4, #22c55e);">AV</div>
+                        <div class="testimonial-info">
+                            <span class="testimonial-name">Amit Verma</span>
+                            <span class="testimonial-role">Senior Developer Candidate</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ PRICING ============ -->
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag" id="pricing-tag">Pricing</span>
+                <h2 class="section-title" id="pricing-title">Simple, Transparent <span class="gradient-text">Pricing</span></h2>
+                <p class="section-description">Choose the plan that fits your hiring needs. Start free, scale as you grow.</p>
+            </div>
+            <div class="pricing-grid">
+                <!-- Free -->
+                <div class="pricing-card" id="pricing-free">
+                    <div class="pricing-header">
+                        <h3 class="pricing-plan">Starter</h3>
+                        <p class="pricing-subtitle">Perfect for small teams</p>
+                    </div>
+                    <div class="pricing-amount">
+                        <span class="pricing-currency">$</span>
+                        <span class="pricing-price">0</span>
+                        <span class="pricing-period">/month</span>
+                    </div>
+                    <ul class="pricing-features">
+                        <li><span class="check">✓</span> Up to 10 candidates/month</li>
+                        <li><span class="check">✓</span> AI Resume Parsing</li>
+                        <li><span class="check">✓</span> Custom MCQ Generation</li>
+                        <li><span class="check">✓</span> Auto-Grading</li>
+                        <li class="disabled"><span class="cross">✗</span> Live AI Interviews</li>
+                        <li class="disabled"><span class="cross">✗</span> Anti-Cheat Proctoring</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-outline btn-full" id="btn-pricing-free">Get Started Free</a>
+                </div>
+                <!-- Pro -->
+                <div class="pricing-card pricing-card-featured" id="pricing-pro">
+                    <div class="pricing-badge">Most Popular</div>
+                    <div class="pricing-header">
+                        <h3 class="pricing-plan">Professional</h3>
+                        <p class="pricing-subtitle">For growing companies</p>
+                    </div>
+                    <div class="pricing-amount">
+                        <span class="pricing-currency">$</span>
+                        <span class="pricing-price">49</span>
+                        <span class="pricing-period">/month</span>
+                    </div>
+                    <ul class="pricing-features">
+                        <li><span class="check">✓</span> Up to 100 candidates/month</li>
+                        <li><span class="check">✓</span> AI Resume Parsing</li>
+                        <li><span class="check">✓</span> Custom MCQ Generation</li>
+                        <li><span class="check">✓</span> Auto-Grading & Breakdown</li>
+                        <li><span class="check">✓</span> Live AI Interviews</li>
+                        <li><span class="check">✓</span> Anti-Cheat Proctoring</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-primary btn-full" id="btn-pricing-pro">Start Pro Trial</a>
+                </div>
+                <!-- Enterprise -->
+                <div class="pricing-card" id="pricing-enterprise">
+                    <div class="pricing-header">
+                        <h3 class="pricing-plan">Enterprise</h3>
+                        <p class="pricing-subtitle">For large organizations</p>
+                    </div>
+                    <div class="pricing-amount">
+                        <span class="pricing-currency">$</span>
+                        <span class="pricing-price">199</span>
+                        <span class="pricing-period">/month</span>
+                    </div>
+                    <ul class="pricing-features">
+                        <li><span class="check">✓</span> Unlimited candidates</li>
+                        <li><span class="check">✓</span> Everything in Pro</li>
+                        <li><span class="check">✓</span> Custom API Integration</li>
+                        <li><span class="check">✓</span> Dedicated Support</li>
+                        <li><span class="check">✓</span> White-Label Option</li>
+                        <li><span class="check">✓</span> SSO & Team Management</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-outline btn-full" id="btn-pricing-enterprise">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ CTA SECTION ============ -->
+    <section class="cta-section" id="cta">
+        <div class="cta-bg-effects">
+            <div class="cta-orb cta-orb-1"></div>
+            <div class="cta-orb cta-orb-2"></div>
+        </div>
+        <div class="container cta-content">
+            <h2 class="cta-title" id="cta-title">Ready to Transform Your <span class="gradient-text">Hiring Process?</span></h2>
+            <p class="cta-description">Join hundreds of companies already using AI Interview System to find the best talent faster.</p>
+            <div class="cta-actions">
+                <a href="#contact" class="btn btn-primary btn-lg" id="btn-cta-start">
+                    <span>Start Free Today</span>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M4 10H16M16 10L11 5M16 10L11 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
+                <a href="#contact" class="btn btn-ghost btn-lg" id="btn-cta-demo">Schedule a Demo</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ CONTACT SECTION ============ -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag" id="contact-tag">Contact</span>
+                <h2 class="section-title" id="contact-title">Get In <span class="gradient-text">Touch</span></h2>
+                <p class="section-description">Have questions or want a personalized demo? We'd love to hear from you.</p>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <div class="contact-info-item" id="contact-email-info">
+                        <div class="contact-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <rect x="2" y="4" width="20" height="16" rx="3" stroke="currentColor" stroke-width="2"/>
+                                <path d="M2 7L12 13L22 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4>Email Us</h4>
+                            <p>hello@aiinterview.dev</p>
+                        </div>
+                    </div>
+                    <div class="contact-info-item" id="contact-github-info">
+                        <div class="contact-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M12 2C6.477 2 2 6.477 2 12C2 16.42 4.865 20.166 8.839 21.489C9.339 21.581 9.521 21.271 9.521 21.006C9.521 20.771 9.513 20.058 9.508 19.167C6.726 19.775 6.139 17.833 6.139 17.833C5.685 16.682 5.029 16.375 5.029 16.375C4.121 15.741 5.098 15.754 5.098 15.754C6.101 15.825 6.629 16.799 6.629 16.799C7.521 18.334 8.97 17.898 9.539 17.642C9.631 16.972 9.889 16.506 10.175 16.242C7.955 15.975 5.619 15.069 5.619 11.231C5.619 10.138 6.009 9.243 6.649 8.545C6.546 8.278 6.203 7.263 6.747 5.884C6.747 5.884 7.587 5.601 9.497 6.896C10.31 6.661 11.159 6.544 12 6.54C12.841 6.544 13.691 6.661 14.505 6.896C16.413 5.601 17.251 5.884 17.251 5.884C17.797 7.263 17.453 8.278 17.351 8.545C17.993 9.243 18.379 10.138 18.379 11.231C18.379 15.079 16.039 15.972 13.813 16.233C14.172 16.559 14.492 17.2 14.492 18.177C14.492 19.579 14.48 20.709 14.48 21.006C14.48 21.273 14.659 21.586 15.167 21.487C19.138 20.162 22 16.418 22 12C22 6.477 17.523 2 12 2Z" fill="currentColor"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4>Open Source</h4>
+                            <p>github.com/sunnygupta998</p>
+                        </div>
+                    </div>
+                    <div class="contact-info-item" id="contact-location-info">
+                        <div class="contact-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2Z" stroke="currentColor" stroke-width="2"/>
+                                <circle cx="12" cy="9" r="3" stroke="currentColor" stroke-width="2"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4>Location</h4>
+                            <p>India 🇮🇳</p>
+                        </div>
+                    </div>
+                </div>
+                <form class="contact-form" id="contact-form">
+                    <div class="form-group">
+                        <label for="contact-name">Full Name</label>
+                        <input type="text" id="contact-name" name="name" placeholder="Enter your name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contact-email">Email Address</label>
+                        <input type="email" id="contact-email" name="email" placeholder="you@company.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contact-company">Company</label>
+                        <input type="text" id="contact-company" name="company" placeholder="Your company name">
+                    </div>
+                    <div class="form-group">
+                        <label for="contact-message">Message</label>
+                        <textarea id="contact-message" name="message" placeholder="Tell us about your hiring needs..." rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full" id="btn-contact-submit">
+                        <span>Send Message</span>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M18 2L9 11M18 2L12 18L9 11M18 2L2 8L9 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="footer" id="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#" class="nav-logo">
+                        <span class="logo-icon">
+                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                                <rect width="32" height="32" rx="8" fill="url(#logoGrad2)"/>
+                                <path d="M10 22V14L16 10L22 14V22L16 18L10 22Z" fill="white" opacity="0.9"/>
+                                <circle cx="16" cy="12" r="2" fill="white"/>
+                                <defs><linearGradient id="logoGrad2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#a855f7"/><stop offset="100%" style="stop-color:#06b6d4"/></linearGradient></defs>
+                            </svg>
+                        </span>
+                        <span class="logo-text">AI Interview<span class="logo-dot">.</span></span>
+                    </a>
+                    <p class="footer-tagline">AI-powered recruitment platform that transforms how companies hire technical talent.</p>
+                </div>
+                <div class="footer-links-group">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                        <li><a href="#how-it-works">How It Works</a></li>
+                        <li><a href="#tech-stack">Tech Stack</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links-group">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links-group">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 AI Interview System. Built by <a href="https://github.com/sunnygupta998" target="_blank" rel="noopener">Sunny Gupta</a>.</p>
+                <div class="footer-social">
+                    <a href="#" aria-label="GitHub" class="social-link" id="social-github">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12C2 16.42 4.865 20.166 8.839 21.489C9.339 21.581 9.521 21.271 9.521 21.006C9.521 20.771 9.513 20.058 9.508 19.167C6.726 19.775 6.139 17.833 6.139 17.833C5.685 16.682 5.029 16.375 5.029 16.375C4.121 15.741 5.098 15.754 5.098 15.754C6.101 15.825 6.629 16.799 6.629 16.799C7.521 18.334 8.97 17.898 9.539 17.642C9.631 16.972 9.889 16.506 10.175 16.242C7.955 15.975 5.619 15.069 5.619 11.231C5.619 10.138 6.009 9.243 6.649 8.545C6.546 8.278 6.203 7.263 6.747 5.884C6.747 5.884 7.587 5.601 9.497 6.896C10.31 6.661 11.159 6.544 12 6.54C12.841 6.544 13.691 6.661 14.505 6.896C16.413 5.601 17.251 5.884 17.251 5.884C17.797 7.263 17.453 8.278 17.351 8.545C17.993 9.243 18.379 10.138 18.379 11.231C18.379 15.079 16.039 15.972 13.813 16.233C14.172 16.559 14.492 17.2 14.492 18.177C14.492 19.579 14.48 20.709 14.48 21.006C14.48 21.273 14.659 21.586 15.167 21.487C19.138 20.162 22 16.418 22 12C22 6.477 17.523 2 12 2Z"/></svg>
+                    </a>
+                    <a href="#" aria-label="LinkedIn" class="social-link" id="social-linkedin">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452H16.893V14.883C16.893 13.555 16.866 11.846 15.041 11.846C13.188 11.846 12.905 13.291 12.905 14.785V20.452H9.351V9H12.765V10.561H12.811C13.288 9.662 14.448 8.711 16.181 8.711C19.782 8.711 20.448 11.081 20.448 14.166V20.452H20.447ZM5.337 7.433C4.193 7.433 3.274 6.507 3.274 5.368C3.274 4.23 4.194 3.305 5.337 3.305C6.477 3.305 7.401 4.23 7.401 5.368C7.401 6.507 6.476 7.433 5.337 7.433ZM7.119 20.452H3.555V9H7.119V20.452Z"/></svg>
+                    </a>
+                    <a href="#" aria-label="Twitter" class="social-link" id="social-twitter">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25H21.552L14.325 10.51L22.827 21.75H16.17L10.956 14.933L4.99 21.75H1.68L9.41 12.915L1.254 2.25H8.08L12.793 8.481L18.244 2.25ZM17.083 19.77H18.916L7.084 4.126H5.117L17.083 19.77Z"/></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

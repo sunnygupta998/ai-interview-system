@@ -1,5 +1,3 @@
-
-
 import os
 from flask import Flask, jsonify
 from flask_cors import CORS
@@ -25,6 +23,7 @@ def create_app():
     
     # Load configuration
     app.config['GROQ_API_KEY'] = config.GROQ_API_KEY
+    app.config['GEMINI_API_KEY'] = config.GEMINI_API_KEY
     app.config['MONGODB_URI'] = config.MONGODB_URI
     app.config['DB_NAME'] = config.DB_NAME
     app.config['JWT_SECRET'] = config.JWT_SECRET

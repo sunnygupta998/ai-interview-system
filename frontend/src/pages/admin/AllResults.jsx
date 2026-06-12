@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { adminAPI } from '../../api/api';
 import DataTable from '../../components/DataTable';
@@ -8,21 +8,38 @@ import './AllResults.css';
 const AllResults = () => {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalRecords, setTotalRecords] = useState(0);
   const navigate = useNavigate();
 
+  const fetchResults = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await adminAPI.getResults(page, perPage);
+      setResults(res.data.results);
+      setTotalPages(res.data.total_pages);
+      setTotalRecords(res.data.total_records);
+    } catch (err) {
+      console.error("Failed to load candidate results:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, [page, perPage]);
+
   useEffect(() => {
-    const fetchResults = async () => {
-      try {
-        const res = await adminAPI.getResults(1, 100); // Fetch top 100 results for simple sorting/filtering
-        setResults(res.data.results);
-      } catch (err) {
-        console.error("Failed to load candidate results:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchResults();
-  }, []);
+  }, [fetchResults]);
+
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+  };
+
+  const handleRowsPerPageChange = (newPerPage) => {
+    setPerPage(newPerPage);
+    setPage(1); // Reset to first page when changing rows per page
+  };
 
   const columns = [
     { 
@@ -101,7 +118,8 @@ const AllResults = () => {
     navigate(`/candidate/results/${row.test_id}`);
   };
 
-  if (loading) {
+  // Show full-page spinner only on initial load
+  if (loading && results.length === 0) {
     return (
       <div className="spinner-container">
         <div className="spinner"></div>
@@ -124,6 +142,14 @@ const AllResults = () => {
           onRowClick={handleRowClick}
           searchPlaceholder="Search candidates by name..."
           searchKey="candidate.name"
+          serverPagination={true}
+          totalRecords={totalRecords}
+          totalPages={totalPages}
+          currentServerPage={page}
+          serverRowsPerPage={perPage}
+          onPageChange={handlePageChange}
+          onRowsPerPageChange={handleRowsPerPageChange}
+          loading={loading}
         />
       </div>
     </div>
@@ -131,3 +157,4 @@ const AllResults = () => {
 };
 
 export default AllResults;
+
