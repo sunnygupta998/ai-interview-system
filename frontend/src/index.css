@@ -154,7 +154,7 @@ a:hover {
 
 /* Glassmorphism Styles */
 .glass-card {
-  background: var(--glass-bg);
+  background: var(--bg-card);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--glass-border);
