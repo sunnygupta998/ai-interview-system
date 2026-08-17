@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, current_app, g
-from pymongo import MongoClient
+from extensions import get_db
 from bson import ObjectId
 from datetime import datetime
 from auth.middleware import token_required
@@ -12,8 +12,7 @@ interview_bp = Blueprint('interview', __name__)
 @token_required
 def start_interview(test_id):
     try:
-        client = MongoClient(current_app.config['MONGODB_URI'])
-        db = client[current_app.config['DB_NAME']]
+        db = get_db()
         
         # Verify test
         test = db.tests.find_one({'_id': ObjectId(test_id)})
@@ -95,8 +94,7 @@ def respond_interview(interview_id):
         if not candidate_message:
             return jsonify({'message': 'Message is required'}), 400
             
-        client = MongoClient(current_app.config['MONGODB_URI'])
-        db = client[current_app.config['DB_NAME']]
+        db = get_db()
         
         interview = db.interviews.find_one({'_id': ObjectId(interview_id)})
         if not interview:
@@ -248,8 +246,7 @@ def text_to_speech():
 @token_required
 def end_interview(interview_id):
     try:
-        client = MongoClient(current_app.config['MONGODB_URI'])
-        db = client[current_app.config['DB_NAME']]
+        db = get_db()
         
         interview = db.interviews.find_one({'_id': ObjectId(interview_id)})
         if not interview:
@@ -344,8 +341,7 @@ def end_interview(interview_id):
 @token_required
 def start_practice_interview(resume_id):
     try:
-        client = MongoClient(current_app.config['MONGODB_URI'])
-        db = client[current_app.config['DB_NAME']]
+        db = get_db()
         
         # Get settings for language and question count
         settings = db.settings.find_one() or {}

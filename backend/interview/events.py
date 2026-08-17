@@ -2,9 +2,7 @@ import os
 import io
 from flask_socketio import emit
 from flask import request
-from extensions import socketio
-from pymongo import MongoClient
-import config
+from extensions import socketio, get_db
 from bson import ObjectId
 from interview.bot import transcribe_audio, generate_speech, _get_client
 
@@ -42,8 +40,7 @@ def handle_submit_audio(data):
         emit('error', {'message': 'Missing data'})
         return
         
-    client = MongoClient(config.MONGODB_URI)
-    db = client[config.DB_NAME]
+    db = get_db()
     
     interview = db.interviews.find_one({'_id': ObjectId(interview_id)})
     if not interview:
@@ -96,10 +93,11 @@ def handle_submit_audio(data):
         groq_client = _get_client()
         stream = groq_client.chat.completions.create(
             messages=messages,
-            model="llama-3.3-70b-versatile",
+            model="qwen/qwen3.6-27b",
             temperature=0.5,
-            max_completion_tokens=200,
-            stream=True # ENABLE STREAMING
+            max_completion_tokens=2048,
+            stream=True,
+            reasoning_format="hidden"
         )
         
         full_response = ""

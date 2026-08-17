@@ -98,10 +98,11 @@ def _generate_with_groq(prompt):
             {"role": "system", "content": prompt},
             {"role": "user", "content": "Generate the technical MCQ question set now."}
         ],
-        model="llama-3.3-70b-versatile",
+        model="qwen/qwen3.6-27b",
         temperature=0.5,
         max_completion_tokens=4096,
-        response_format={"type": "json_object"}
+        response_format={"type": "json_object"},
+        reasoning_format="hidden"
     )
     return json.loads(response.choices[0].message.content).get('questions', [])
 

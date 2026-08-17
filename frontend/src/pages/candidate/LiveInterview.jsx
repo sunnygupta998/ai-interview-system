@@ -167,7 +167,6 @@ const LiveInterview = () => {
         socketRef.current.emit('join_interview', { interview_id: data.interview_id });
                 
         if (data.first_question) {
-          setTranscript(prev => [...prev, { role: 'ai', content: data.first_question, timestamp: new Date().toISOString() }]);
           speakText(data.first_question, data.language);
         }
       } catch (err) {

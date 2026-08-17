@@ -79,10 +79,14 @@ def generate_first_question(resume_skills, domain, language='English'):
 
     try:
         response = client.chat.completions.create(
-            messages=[{"role": "system", "content": system_prompt}],
-            model="llama-3.3-70b-versatile",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": "Please greet me and ask the first interview question now."}
+            ],
+            model="qwen/qwen3.6-27b",
             temperature=0.7,
-            max_completion_tokens=500
+            max_completion_tokens=2048,
+            reasoning_format="hidden"
         )
         return response.choices[0].message.content.strip()
     except Exception as e:
@@ -125,9 +129,10 @@ def generate_next_question(transcript, language='English'):
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": f"Transcript:\n{formatted_transcript}\n\nGenerate your next response/question:"}
             ],
-            model="llama-3.3-70b-versatile",
+            model="qwen/qwen3.6-27b",
             temperature=0.6,
-            max_completion_tokens=500
+            max_completion_tokens=2048,
+            reasoning_format="hidden"
         )
         return response.choices[0].message.content.strip()
     except Exception as e:
@@ -160,10 +165,11 @@ def _evaluate_with_groq(formatted_transcript, system_prompt):
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": f"Interview Transcript:\n{formatted_transcript}"}
         ],
-        model="llama-3.3-70b-versatile",
+        model="qwen/qwen3.6-27b",
         temperature=0.3,
-        max_completion_tokens=1000,
-        response_format={"type": "json_object"}
+        max_completion_tokens=4096,
+        response_format={"type": "json_object"},
+        reasoning_format="hidden"
     )
     return json.loads(response.choices[0].message.content)
 

@@ -78,10 +78,11 @@ def _analyze_with_groq(resume_text):
             {"role": "system", "content": RESUME_SYSTEM_PROMPT},
             {"role": "user", "content": f"Here is the resume text to analyze:\n\n{resume_text}"}
         ],
-        model="llama-3.3-70b-versatile",
+        model="qwen/qwen3.6-27b",
         temperature=0.3,
         max_completion_tokens=4096,
-        response_format={"type": "json_object"}
+        response_format={"type": "json_object"},
+        reasoning_format="hidden"
     )
     return json.loads(response.choices[0].message.content)
 
