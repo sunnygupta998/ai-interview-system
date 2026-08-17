@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, current_app, g
-from pymongo import MongoClient
+from extensions import get_db
 from bson import ObjectId
 from auth.middleware import token_required, admin_required
 
@@ -10,8 +10,7 @@ admin_bp = Blueprint('admin', __name__)
 @admin_required
 def get_settings():
     try:
-        client = MongoClient(current_app.config['MONGODB_URI'])
-        db = client[current_app.config['DB_NAME']]
+        db = get_db()
         
         settings = db.settings.find_one()
         if not settings:
@@ -78,8 +77,7 @@ def update_settings():
                 'hard': hard
             }
             
-        client = MongoClient(current_app.config['MONGODB_URI'])
-        db = client[current_app.config['DB_NAME']]
+        db = get_db()
         
         # Check if settings exists
         settings = db.settings.find_one()
@@ -109,8 +107,7 @@ def get_all_results():
         per_page = int(request.args.get('per_page', 10))
         skip = (page - 1) * per_page
         
-        client = MongoClient(current_app.config['MONGODB_URI'])
-        db = client[current_app.config['DB_NAME']]
+        db = get_db()
         
         total_results = db.results.count_documents({})
         
@@ -171,8 +168,7 @@ def get_all_results():
 @admin_required
 def get_candidate_results(candidate_id):
     try:
-        client = MongoClient(current_app.config['MONGODB_URI'])
-        db = client[current_app.config['DB_NAME']]
+        db = get_db()
         
         results = list(db.results.find({'user_id': ObjectId(candidate_id)}).sort('submitted_at', -1))
         
@@ -215,8 +211,7 @@ def get_candidate_results(candidate_id):
 @admin_required
 def get_dashboard_stats():
     try:
-        client = MongoClient(current_app.config['MONGODB_URI'])
-        db = client[current_app.config['DB_NAME']]
+        db = get_db()
         
         # Calculate stats
         total_candidates = db.users.count_documents({'role': 'candidate'})

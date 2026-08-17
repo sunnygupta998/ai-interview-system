@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify, current_app, g
-from pymongo import MongoClient
+from extensions import get_db, limiter
+import re
 import bcrypt
 import random
 from datetime import datetime, timedelta
@@ -12,16 +13,26 @@ import os
 auth_bp = Blueprint('auth', __name__)
 
 @auth_bp.route('/register', methods=['POST'])
+@limiter.limit("5 per minute")
 def register():
     data = request.get_json() or {}
-    name = data.get('name')
-    email = data.get('email')
-    password = data.get('password')
+    name = data.get('name', '').strip()
+    email = data.get('email', '').strip().lower()
+    password = data.get('password', '')
     role = data.get('role', 'candidate') # Default to candidate
     admin_secret = data.get('adminSecret')
 
     if not name or not email or not password:
         return jsonify({'message': 'Missing name, email, or password'}), 400
+
+    if len(name) < 2 or len(name) > 100:
+        return jsonify({'message': 'Name must be between 2 and 100 characters'}), 400
+
+    if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+        return jsonify({'message': 'Invalid email format'}), 400
+
+    if len(password) < 8:
+        return jsonify({'message': 'Password must be at least 8 characters long'}), 400
 
     if role not in ['admin', 'candidate']:
         return jsonify({'message': 'Invalid role. Must be admin or candidate'}), 400
@@ -30,8 +41,7 @@ def register():
         if admin_secret != current_app.config.get('ADMIN_SECRET_KEY'):
             return jsonify({'message': 'Invalid Admin Registration Code. Registration denied.'}), 403
 
-    client = MongoClient(current_app.config['MONGODB_URI'])
-    db = client[current_app.config['DB_NAME']]
+    db = get_db()
 
     # Check for duplicate email
     if db.users.find_one({'email': email}):
@@ -68,16 +78,16 @@ def register():
     }), 201
 
 @auth_bp.route('/login', methods=['POST'])
+@limiter.limit("10 per minute")
 def login():
     data = request.get_json() or {}
-    email = data.get('email')
-    password = data.get('password')
+    email = data.get('email', '').strip().lower()
+    password = data.get('password', '')
 
     if not email or not password:
         return jsonify({'message': 'Missing email or password'}), 400
 
-    client = MongoClient(current_app.config['MONGODB_URI'])
-    db = client[current_app.config['DB_NAME']]
+    db = get_db()
 
     user = db.users.find_one({'email': email})
 
@@ -110,16 +120,16 @@ def me():
     return jsonify({'user': g.user}), 200
 
 @auth_bp.route('/verify-email', methods=['POST'])
+@limiter.limit("10 per minute")
 def verify_email():
     data = request.get_json() or {}
-    email = data.get('email')
+    email = data.get('email', '').strip().lower()
     code = data.get('code')
     
     if not email or not code:
         return jsonify({'message': 'Missing email or verification code'}), 400
         
-    client = MongoClient(current_app.config['MONGODB_URI'])
-    db = client[current_app.config['DB_NAME']]
+    db = get_db()
     
     user = db.users.find_one({'email': email})
     if not user:
@@ -155,15 +165,15 @@ def verify_email():
     }), 200
 
 @auth_bp.route('/resend-verification', methods=['POST'])
+@limiter.limit("3 per minute")
 def resend_verification():
     data = request.get_json() or {}
-    email = data.get('email')
+    email = data.get('email', '').strip().lower()
     
     if not email:
         return jsonify({'message': 'Missing email'}), 400
         
-    client = MongoClient(current_app.config['MONGODB_URI'])
-    db = client[current_app.config['DB_NAME']]
+    db = get_db()
     
     user = db.users.find_one({'email': email})
     if not user:
@@ -189,6 +199,7 @@ def resend_verification():
     return jsonify({'message': 'A new verification code has been sent to your email.'}), 200
 
 @auth_bp.route('/google', methods=['POST'])
+@limiter.limit("10 per minute")
 def google_auth():
     data = request.get_json() or {}
     token = data.get('token')
@@ -205,8 +216,7 @@ def google_auth():
         email = idinfo['email']
         name = idinfo.get('name', '')
         
-        client = MongoClient(current_app.config['MONGODB_URI'])
-        db = client[current_app.config['DB_NAME']]
+        db = get_db()
         
         # Check if user exists
         user = db.users.find_one({'email': email})

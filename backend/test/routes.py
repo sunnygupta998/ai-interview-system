@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, current_app, g
-from pymongo import MongoClient
+from extensions import get_db
 from bson import ObjectId
 from datetime import datetime, timedelta
 from auth.middleware import token_required
@@ -12,8 +12,7 @@ test_bp = Blueprint('test', __name__)
 @token_required
 def create_test(resume_id):
     try:
-        client = MongoClient(current_app.config['MONGODB_URI'])
-        db = client[current_app.config['DB_NAME']]
+        db = get_db()
         
         # Check if resume exists and belongs to user
         resume = db.resumes.find_one({'_id': ObjectId(resume_id)})
@@ -85,8 +84,7 @@ def create_test(resume_id):
 @token_required
 def start_test(test_id):
     try:
-        client = MongoClient(current_app.config['MONGODB_URI'])
-        db = client[current_app.config['DB_NAME']]
+        db = get_db()
         
         test = db.tests.find_one({'_id': ObjectId(test_id)})
         if not test:
@@ -136,8 +134,7 @@ def start_test(test_id):
 @token_required
 def submit_test(test_id):
     try:
-        client = MongoClient(current_app.config['MONGODB_URI'])
-        db = client[current_app.config['DB_NAME']]
+        db = get_db()
         
         test = db.tests.find_one({'_id': ObjectId(test_id)})
         if not test:
@@ -227,8 +224,7 @@ def submit_test(test_id):
 @token_required
 def get_test_results(test_id):
     try:
-        client = MongoClient(current_app.config['MONGODB_URI'])
-        db = client[current_app.config['DB_NAME']]
+        db = get_db()
         
         test = db.tests.find_one({'_id': ObjectId(test_id)})
         if not test:
@@ -283,8 +279,7 @@ def get_test_results(test_id):
 @token_required
 def my_tests():
     try:
-        client = MongoClient(current_app.config['MONGODB_URI'])
-        db = client[current_app.config['DB_NAME']]
+        db = get_db()
         
         # Fetch tests with result information
         tests = list(db.tests.find({'user_id': ObjectId(g.user['_id'])}))

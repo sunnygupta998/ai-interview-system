@@ -1,6 +1,6 @@
 import os
 from flask import Blueprint, request, jsonify, current_app, g
-from pymongo import MongoClient
+from extensions import get_db
 from bson import ObjectId
 from datetime import datetime
 from auth.middleware import token_required
@@ -71,8 +71,7 @@ def upload_resume():
             os.remove(file_path)
         
         # Store in MongoDB
-        client = MongoClient(current_app.config['MONGODB_URI'])
-        db = client[current_app.config['DB_NAME']]
+        db = get_db()
         
         resume_doc = {
             'user_id': ObjectId(g.user['_id']),
@@ -101,8 +100,7 @@ def upload_resume():
 @token_required
 def my_resumes():
     try:
-        client = MongoClient(current_app.config['MONGODB_URI'])
-        db = client[current_app.config['DB_NAME']]
+        db = get_db()
         
         resumes = list(db.resumes.find({
             'user_id': ObjectId(g.user['_id']), 
@@ -132,8 +130,7 @@ def my_resumes():
 @token_required
 def get_analysis(resume_id):
     try:
-        client = MongoClient(current_app.config['MONGODB_URI'])
-        db = client[current_app.config['DB_NAME']]
+        db = get_db()
         
         resume = db.resumes.find_one({'_id': ObjectId(resume_id)})
         
@@ -158,8 +155,7 @@ def get_analysis(resume_id):
 @token_required
 def delete_resume(resume_id):
     try:
-        client = MongoClient(current_app.config['MONGODB_URI'])
-        db = client[current_app.config['DB_NAME']]
+        db = get_db()
         
         resume = db.resumes.find_one({'_id': ObjectId(resume_id)})
         

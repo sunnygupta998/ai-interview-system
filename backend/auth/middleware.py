@@ -2,7 +2,7 @@ import jwt
 from datetime import datetime, timedelta, timezone
 from functools import wraps
 from flask import request, jsonify, g, current_app
-from pymongo import MongoClient
+from extensions import get_db
 from bson import ObjectId
 import os
 
@@ -43,8 +43,7 @@ def token_required(f):
             data = jwt.decode(token, secret_key, algorithms=['HS256'])
             
             # Fetch user from database
-            client = MongoClient(current_app.config['MONGODB_URI'])
-            db = client[current_app.config['DB_NAME']]
+            db = get_db()
             user = db.users.find_one({'_id': ObjectId(data['sub'])})
             
             if not user:

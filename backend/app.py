@@ -1,8 +1,7 @@
 import os
 from flask import Flask, jsonify
 from flask_cors import CORS
-from extensions import socketio
-from pymongo import MongoClient
+from extensions import socketio, limiter, init_db, get_db
 import config
 
 # Import blueprints
@@ -20,6 +19,7 @@ def create_app():
     # Enable Cross-Origin Resource Sharing (CORS)
     CORS(app)
     socketio.init_app(app)
+    limiter.init_app(app)
     
     # Load configuration
     app.config['GROQ_API_KEY'] = config.GROQ_API_KEY
@@ -27,7 +27,11 @@ def create_app():
     app.config['MONGODB_URI'] = config.MONGODB_URI
     app.config['DB_NAME'] = config.DB_NAME
     app.config['JWT_SECRET'] = config.JWT_SECRET
+    app.config['ADMIN_SECRET_KEY'] = config.ADMIN_SECRET_KEY
     app.config['PORT'] = config.FLASK_PORT
+    
+    # Initialize shared MongoDB connection
+    init_db(app)
     
     # Register blueprints
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
@@ -42,8 +46,7 @@ def create_app():
     
     # Seed default settings
     try:
-        client = MongoClient(app.config['MONGODB_URI'])
-        db = client[app.config['DB_NAME']]
+        db = get_db()
         settings_col = db.settings
         
         if settings_col.count_documents({}) == 0:
@@ -66,6 +69,10 @@ def create_app():
     @app.errorhandler(500)
     def internal_server_error(e):
         return jsonify({'message': 'An internal server error occurred'}), 500
+
+    @app.errorhandler(429)
+    def ratelimit_handler(e):
+        return jsonify({'message': 'Too many requests. Please slow down and try again later.'}), 429
         
     return app
 
