@@ -27,3 +27,11 @@ pip-delete-this-directory.txt
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Archives & Uploads
+*.zip
+backend/uploads/
+uploads/
+*.pdf
+!dummy.pdf
+!test.pdf
