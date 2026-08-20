@@ -21,3 +21,24 @@
 .results-table-card {
   padding: 24px !important;
 }
+
+/* ===== Mobile ≤480px ===== */
+@media (max-width: 480px) {
+  .admin-results-page-container {
+    padding: 16px 12px;
+    gap: 16px;
+  }
+
+  .results-page-header h1 {
+    font-size: 1.35rem;
+  }
+
+  .results-page-header p {
+    font-size: 0.9rem;
+  }
+
+  .results-table-card {
+    padding: 14px !important;
+  }
+}
+

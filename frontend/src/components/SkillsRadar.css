@@ -155,3 +155,38 @@
   border-color: rgba(0, 206, 201, 0.2);
   color: var(--accent-light);
 }
+
+/* ===== Mobile ≤480px ===== */
+@media (max-width: 480px) {
+  .skills-analysis-container {
+    gap: 16px;
+  }
+
+  .skills-summary-header {
+    gap: 14px;
+    padding: 16px !important;
+  }
+
+  .meta-value {
+    font-size: 1.1rem;
+  }
+
+  .skills-category-card {
+    padding: 16px !important;
+  }
+
+  .skills-category-card h4 {
+    font-size: 0.95rem;
+    margin-bottom: 12px;
+  }
+
+  .skills-tags {
+    gap: 8px;
+  }
+
+  .skill-tag {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+  }
+}
+

@@ -339,10 +339,51 @@
 }
 
 @media (max-width: 576px) {
-  .option-button {
-    padding: 20px 16px;
+  .test-interface-container {
+    padding: 8px;
   }
-  
+
+  .test-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px !important;
+  }
+
+  .test-title-section h2 {
+    font-size: 1.1rem;
+  }
+
+  .question-progress-text {
+    font-size: 0.8rem;
+  }
+
+  .question-text {
+    font-size: 1rem;
+  }
+
+  .option-button {
+    padding: 14px 12px;
+    font-size: 0.9rem;
+  }
+
+  .option-letter {
+    width: 28px;
+    height: 28px;
+    margin-right: 10px;
+    font-size: 0.85rem;
+  }
+
+  .navigation-controls {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .navigation-controls .btn {
+    flex: 1;
+    min-width: 120px;
+  }
+
   .navigation-sidebar {
     position: static;
     margin-top: 24px;
@@ -353,4 +394,23 @@
   .navigator-grid {
     grid-template-columns: repeat(6, 1fr);
   }
+
+  .question-info {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .modal-content {
+    padding: 20px !important;
+  }
+
+  .modal-content h3 {
+    font-size: 1.2rem;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
 }
+

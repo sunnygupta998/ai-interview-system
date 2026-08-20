@@ -30,12 +30,36 @@
   color: var(--text-secondary);
 }
 
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
 @media (max-width: 768px) {
   .dashboard-hero {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
     gap: 20px;
     padding: 24px !important;
+  }
+
+  .hero-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+    gap: 10px;
+    width: 100%;
+  }
+
+  .hero-btn {
+    width: 100%;
+    padding: 10px 8px !important;
+    font-size: 0.85rem !important;
+    min-width: 0 !important;
+    white-space: nowrap;
+    text-align: center;
+    justify-content: center;
   }
 }
 
@@ -257,3 +281,111 @@
   max-width: 250px;
   line-height: 1.4;
 }
+
+/* ===== Mobile ≤480px ===== */
+@media (max-width: 480px) {
+  .candidate-dashboard-container {
+    padding: 16px 12px;
+    gap: 16px;
+  }
+
+  .dashboard-hero {
+    padding: 18px 14px !important;
+    gap: 14px;
+  }
+
+  .hero-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+    gap: 8px;
+    width: 100%;
+  }
+
+  .hero-btn {
+    padding: 9px 4px !important;
+    font-size: clamp(0.72rem, 2.8vw, 0.82rem) !important;
+    letter-spacing: -0.02em;
+    gap: 4px !important;
+    text-align: center;
+    justify-content: center;
+    white-space: nowrap;
+    min-width: 0 !important;
+  }
+
+  .hero-content h1 {
+    font-size: 1.35rem;
+  }
+
+  .hero-content p {
+    font-size: 0.9rem;
+  }
+
+  .stats-row {
+    gap: 12px;
+  }
+
+  .stat-card {
+    padding: 16px !important;
+    gap: 14px;
+  }
+
+  .stat-icon-wrapper {
+    width: 42px;
+    height: 42px;
+    font-size: 1.2rem;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+  }
+
+  .stat-number {
+    font-size: 1.3rem;
+  }
+
+  .dashboard-lists-layout {
+    gap: 16px;
+  }
+
+  .dashboard-column {
+    min-height: auto;
+  }
+
+  .column-header {
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+  }
+
+  .column-header h3 {
+    font-size: 1rem;
+  }
+
+  .dashboard-list {
+    gap: 10px;
+  }
+
+  .list-item {
+    padding: 12px;
+    gap: 10px;
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
+
+  .list-item-icon {
+    font-size: 1.2rem;
+  }
+
+  .item-title {
+    font-size: 0.85rem;
+    word-break: break-word;
+  }
+
+  .item-subtitle {
+    font-size: 0.75rem;
+  }
+
+  .empty-list-callout {
+    padding: 24px 16px;
+  }
+}
+

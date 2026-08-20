@@ -248,12 +248,15 @@ def end_interview(interview_id):
     try:
         db = get_db()
         
+        if not interview_id or not ObjectId.is_valid(interview_id):
+            return jsonify({'message': 'Invalid interview ID'}), 400
+            
         interview = db.interviews.find_one({'_id': ObjectId(interview_id)})
         if not interview:
             return jsonify({'message': 'Interview not found'}), 404
             
         if interview.get('status') == 'completed':
-            return jsonify({'message': 'Interview is already completed'}), 400
+            return jsonify({'message': 'Interview is already completed', 'status': 'completed'}), 200
             
         transcript = interview.get('transcript', [])
         language = interview.get('language', 'English')

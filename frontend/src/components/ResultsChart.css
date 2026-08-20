@@ -340,3 +340,61 @@
 .review-explanation strong {
   color: var(--text-primary);
 }
+
+/* ===== Mobile ≤480px ===== */
+@media (max-width: 480px) {
+  .results-summary-card {
+    padding: 20px !important;
+    gap: 16px;
+  }
+
+  .score-circle-wrapper {
+    width: 120px;
+    height: 120px;
+  }
+
+  .score-percentage {
+    font-size: 1.5rem;
+  }
+
+  .score-ratio {
+    font-size: 0.75rem;
+  }
+
+  .verdict-title {
+    font-size: 1.3rem;
+  }
+
+  .verdict-desc {
+    font-size: 0.9rem;
+  }
+
+  .verdict-badge {
+    font-size: 0.75rem;
+    padding: 4px 10px;
+  }
+
+  .review-card-header {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .review-question {
+    font-size: 0.95rem;
+  }
+
+  .review-option {
+    padding: 10px 12px;
+    font-size: 0.85rem;
+  }
+
+  .review-explanation {
+    padding: 12px;
+    font-size: 0.85rem;
+  }
+
+  .topic-header {
+    font-size: 0.85rem;
+  }
+}
+

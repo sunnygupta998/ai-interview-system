@@ -131,3 +131,66 @@
   padding: 40px;
   color: var(--text-muted);
 }
+
+/* ===== Mobile ≤480px ===== */
+@media (max-width: 480px) {
+  .admin-dashboard-container {
+    padding: 16px 12px;
+    gap: 20px;
+  }
+
+  .admin-hero {
+    padding-bottom: 16px;
+  }
+
+  .hero-text h1 {
+    font-size: 1.35rem;
+  }
+
+  .hero-text p {
+    font-size: 0.9rem;
+  }
+
+  .stats-grid {
+    gap: 12px;
+  }
+
+  .stat-card {
+    padding: 16px !important;
+    gap: 14px;
+  }
+
+  .stat-icon-wrapper {
+    width: 42px;
+    height: 42px;
+    font-size: 1.2rem;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+  }
+
+  .stat-number {
+    font-size: 1.3rem;
+  }
+
+  .card-header {
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+  }
+
+  .card-header h3 {
+    font-size: 1rem;
+  }
+
+  .admin-table th {
+    padding: 10px 12px;
+    font-size: 0.8rem;
+  }
+
+  .admin-table td {
+    padding: 12px;
+    font-size: 0.85rem;
+  }
+}
+

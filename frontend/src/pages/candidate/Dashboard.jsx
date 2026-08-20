@@ -89,20 +89,20 @@ const CandidateDashboard = () => {
           <h1>Hello, {user.name}!</h1>
           <p>Analyze your resume skills and complete your customized interview assessments.</p>
         </div>
-        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+        <div className="hero-actions">
           {enablePracticeInterview && resumes.length > 0 && (
             <button 
               onClick={() => {
                 const latestResume = [...resumes].sort((a, b) => new Date(b.uploaded_at) - new Date(a.uploaded_at))[0];
                 navigate(`/candidate/interview/practice/${latestResume._id}`);
               }}
-              className="btn btn-primary"
+              className="btn btn-primary hero-btn"
             >
               Practice AI Interview
             </button>
           )}
-          <Link to="/candidate/upload" className="btn btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <FiUploadCloud /> Upload New Resume
+          <Link to="/candidate/upload" className="btn btn-secondary hero-btn">
+            <FiUploadCloud /> Upload Resume
           </Link>
         </div>
       </div>

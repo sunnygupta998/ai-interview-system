@@ -164,3 +164,41 @@
   font-size: 1.3rem;
   flex-shrink: 0;
 }
+
+/* ===== Mobile ≤480px ===== */
+@media (max-width: 480px) {
+  .upload-zone {
+    padding: 32px 16px;
+  }
+
+  .upload-icon {
+    font-size: 2.5rem;
+  }
+
+  .upload-prompt h3 {
+    font-size: 1rem;
+  }
+
+  .upload-prompt p {
+    font-size: 0.8rem;
+  }
+
+  .file-details {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .file-icon {
+    font-size: 1.5rem;
+  }
+
+  .file-name {
+    font-size: 0.9rem;
+  }
+
+  .upload-alert {
+    padding: 10px 12px;
+    font-size: 0.85rem;
+  }
+}
+

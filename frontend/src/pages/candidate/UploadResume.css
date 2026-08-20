@@ -81,3 +81,25 @@
   display: flex;
   flex-direction: column;
 }
+
+/* ===== Mobile ≤480px ===== */
+@media (max-width: 480px) {
+  .upload-resume-page-container {
+    padding: 16px 12px;
+    gap: 20px;
+  }
+
+  .page-header h1 {
+    font-size: 1.35rem;
+  }
+
+  .page-header p {
+    font-size: 0.9rem;
+  }
+
+  .section-title {
+    font-size: 1rem;
+    margin-bottom: 14px;
+  }
+}
+

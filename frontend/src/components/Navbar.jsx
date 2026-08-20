@@ -22,7 +22,7 @@ const Navbar = () => {
   if (!user) return null;
 
   return (
-    <nav className="navbar glass-card" style={{ border: 'none', borderRadius: 0, padding: '0 20px', position: 'sticky', top: 0, zIndex: 1000 }}>
+    <nav className="navbar" style={{ position: 'sticky', top: 0, zIndex: 1000 }}>
       <div className="navbar-container">
         <Link to="/" className="navbar-logo" onClick={closeMenu}>
           <span>AI</span> Interview

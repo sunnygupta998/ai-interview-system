@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { interviewAPI } from '../../api/api';
-import { FiMic, FiMicOff, FiVideo, FiVideoOff } from 'react-icons/fi';
+import { FiMic, FiMicOff, FiVideo, FiVideoOff, FiPhoneOff, FiAlertCircle, FiRotateCcw, FiHome, FiAward } from 'react-icons/fi';
 import io from 'socket.io-client';
 import './LiveInterview.css';
 
@@ -24,6 +24,7 @@ const LiveInterview = () => {
   const [tabSwitches, setTabSwitches] = useState(0);
   const [aiIsSpeaking, setAiIsSpeaking] = useState(false);
   const [aiStreamingText, setAiStreamingText] = useState('');
+  const [showEndModal, setShowEndModal] = useState(false);
   
   // Media states
   const [cameraOn, setCameraOn] = useState(true);
@@ -126,7 +127,6 @@ const LiveInterview = () => {
       console.error("Socket Error:", data.message);
       setIsTranscribing(false);
       setStatus('idle');
-      alert(`Server Error: ${data.message}`);
     });
 
     const initInterview = async () => {
@@ -237,16 +237,12 @@ const LiveInterview = () => {
     const averageVolume = sum / dataArray.length;
     
     // INTERRUPTION LOGIC: If candidate speaks loudly (> 30) while AI is talking, cut AI off!
-    // Using a ref or checking aiIsSpeaking inside the loop can be tricky with closures,
-    // so we rely on the audioRef's actual play state and window.speechSynthesis
     if (averageVolume > 30) {
       if (audioRef.current && !audioRef.current.paused) {
-        console.log("INTERRUPTION DETECTED! Stopping AI Audio.");
         audioRef.current.pause();
         setAiIsSpeaking(false);
       }
       if (window.speechSynthesis.speaking) {
-        console.log("INTERRUPTION DETECTED! Stopping TTS.");
         window.speechSynthesis.cancel();
         setAiIsSpeaking(false);
       }
@@ -294,9 +290,7 @@ const LiveInterview = () => {
     } else if (tabSwitches >= 3) {
       alert("You have switched tabs too many times. Your interview is being terminated and a score of 0 will be recorded.");
       
-      if (streamRef.current) {
-        streamRef.current.getTracks().forEach(track => track.stop());
-      }
+      cleanupMedia();
       
       setStatus('processing');
       interviewAPI.end(interviewId, { tab_switches: tabSwitches, cheating_detected: true })
@@ -351,44 +345,62 @@ const LiveInterview = () => {
     }
   };
 
-  const endInterview = async () => {
-    if (!window.confirm("Are you sure you want to end the interview?")) return;
+  const cleanupMedia = () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+      setCameraOn(false);
+      setMicOn(false);
+      setStream(null);
+      streamRef.current = null;
+    }
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.src = '';
+    }
+    window.speechSynthesis.cancel();
+    setAiIsSpeaking(false);
+    
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+    }
+    if (audioContextRef.current) {
+      try {
+        audioContextRef.current.close();
+      } catch (e) {}
+      audioContextRef.current = null;
+    }
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+    }
+  };
+
+  const endInterview = () => {
+    setShowEndModal(true);
+  };
+
+  const confirmEndInterview = async () => {
+    setShowEndModal(false);
+    setStatus('processing');
+    
+    cleanupMedia();
     
     try {
-      setStatus('processing');
-      
-      // Stop Camera and Mic immediately to switch off hardware indicators
-      if (streamRef.current) {
-        streamRef.current.getTracks().forEach(track => track.stop());
-        setCameraOn(false);
-        setMicOn(false);
-        setStream(null);
-        streamRef.current = null;
-        if (videoRef.current) {
-          videoRef.current.srcObject = null;
-        }
+      if (interviewId) {
+        await interviewAPI.end(interviewId, { tab_switches: tabSwitches });
       }
-      if (audioContextRef.current) {
-        audioContextRef.current.close();
-        audioContextRef.current = null;
-      }
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
-      if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
-        mediaRecorderRef.current.stop();
-        setIsRecording(false);
-      }
-      
-      // Pass proctoring data directly via standard HTTP route
-      await interviewAPI.end(interviewId, { tab_switches: tabSwitches });
-      
-      setStatus('completed');
-      if (socketRef.current) socketRef.current.disconnect();
     } catch (err) {
-      console.error("Error ending interview:", err);
-      alert("Failed to end interview. Please try again.");
-      setStatus('idle');
+      console.warn("Error calling end interview endpoint:", err);
+    } finally {
+      setStatus('completed');
+      if (socketRef.current) {
+        try {
+          socketRef.current.disconnect();
+        } catch (e) {}
+      }
     }
   };
 
@@ -493,16 +505,26 @@ const LiveInterview = () => {
   if (status === 'completed') {
     return (
       <div className="live-interview-container completed-state">
-        <div className="glass-card success-card animate-fade">
-          <h2>Interview Completed Successfully</h2>
-          <p>Thank you for your time. The AI is analyzing your responses.</p>
-          <div className="completed-actions"style={{ display: 'flex',justifyContent: 'space-around',padding: '20px' }}>
-            <button className="btn btn-primary" onClick={() => navigate('/candidate/dashboard')}>
-              Return to Dashboard
+        <div className="glass-card success-card animate-fade" style={{ maxWidth: '500px', width: '100%', textAlign: 'center', padding: '32px 24px' }}>
+          <h2 style={{ marginBottom: '12px' }}>{isPractice ? 'Practice Session Ended' : 'Interview Completed'}</h2>
+          <p style={{ color: 'var(--text-secondary)', marginBottom: '24px', lineHeight: '1.5' }}>
+            {isPractice 
+              ? 'Your practice interview is complete. You can practice again anytime or return to your dashboard.' 
+              : 'Thank you for your time. The AI evaluation and your detailed interview report are being processed.'}
+          </p>
+          <div className="completed-actions" style={{ display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap' }}>
+            <button className="btn btn-primary" onClick={() => navigate('/candidate/dashboard')} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <FiHome /> Dashboard
             </button>
-            <button className="btn btn-secondary" onClick={() => navigate(`/candidate/results/${id}`)}>
-              View Detailed Results
-            </button>
+            {isPractice ? (
+              <button className="btn btn-secondary" onClick={() => window.location.reload()} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <FiRotateCcw /> Practice Again
+              </button>
+            ) : (
+              <button className="btn btn-secondary" onClick={() => navigate(`/candidate/results/${id}`)} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <FiAward /> View Results
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -513,12 +535,17 @@ const LiveInterview = () => {
     <div className="live-interview-container">
       <div className="interview-header">
         <div className="interview-title">
-          <h2>Live AI Interview</h2>
+          <h2>{isPractice ? 'Practice AI Interview' : 'Live AI Interview'}</h2>
           <span className="live-badge"><span className="pulse-dot"></span> Live</span>
         </div>
         <div className="interview-controls">
-          <button className="btn btn-danger btn-sm" onClick={endInterview} disabled={status === 'processing' || status === 'thinking' || status === 'transcribing'}>
-            End Interview
+          <button 
+            className="btn btn-danger btn-sm" 
+            onClick={endInterview} 
+            disabled={status === 'processing'}
+            style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+          >
+            <FiPhoneOff /> End Interview
           </button>
         </div>
       </div>
@@ -579,6 +606,15 @@ const LiveInterview = () => {
               <button className={`media-btn ${cameraOn ? 'on' : 'off'}`} onClick={toggleCamera} title={cameraOn ? "Turn off Camera" : "Turn on Camera"}>
                 {cameraOn ? <FiVideo /> : <FiVideoOff />}
               </button>
+
+              <button 
+                className="media-btn danger" 
+                onClick={endInterview} 
+                title="End Interview"
+                disabled={status === 'processing'}
+              >
+                <FiPhoneOff />
+              </button>
             </div>
           </div>
         </div>
@@ -616,8 +652,34 @@ const LiveInterview = () => {
           </div>
         </div>
       </div>
+
+      {/* Confirmation Modal */}
+      {showEndModal && (
+        <div className="modal-overlay" onClick={() => setShowEndModal(false)} style={{ zIndex: 1000 }}>
+          <div className="modal-content glass-card" onClick={e => e.stopPropagation()} style={{ maxWidth: '420px', textAlign: 'center', padding: '28px 24px' }}>
+            <div style={{ fontSize: '2.5rem', color: 'var(--error)', marginBottom: '12px' }}>
+              <FiAlertCircle />
+            </div>
+            <h3 style={{ marginBottom: '8px' }}>End Interview?</h3>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', marginBottom: '24px', lineHeight: '1.5' }}>
+              {isPractice 
+                ? 'Are you sure you want to end this practice session? You can practice again anytime.' 
+                : 'Are you sure you want to end the interview now? The AI will evaluate the answers you have provided so far.'}
+            </p>
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+              <button className="btn btn-secondary" onClick={() => setShowEndModal(false)} style={{ flex: 1 }}>
+                Continue
+              </button>
+              <button className="btn btn-danger" onClick={confirmEndInterview} style={{ flex: 1 }}>
+                Yes, End
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
 export default LiveInterview;
+
