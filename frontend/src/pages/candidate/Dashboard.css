@@ -282,6 +282,64 @@
   line-height: 1.4;
 }
 
+/* Skills Modal */
+.skills-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.skills-modal-content {
+  width: 100%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  padding: 28px 24px;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.skills-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  font-size: 1.25rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  z-index: 10;
+}
+
+.skills-modal-close:hover {
+  background: rgba(255, 118, 117, 0.2);
+  color: var(--error);
+  border-color: var(--error);
+}
+
+.skills-modal-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  padding-right: 40px;
+  word-break: break-word;
+}
+
 /* ===== Mobile ≤480px ===== */
 @media (max-width: 480px) {
   .candidate-dashboard-container {
@@ -386,6 +444,32 @@
 
   .empty-list-callout {
     padding: 24px 16px;
+  }
+
+  .skills-modal-overlay {
+    padding: 8px 6px;
+  }
+
+  .skills-modal-content {
+    width: 100%;
+    max-width: 100%;
+    padding: 16px 10px;
+    max-height: 94vh;
+    border-radius: 12px;
+  }
+
+  .skills-modal-close {
+    top: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    font-size: 1.1rem;
+  }
+
+  .skills-modal-title {
+    font-size: 1.05rem;
+    margin-bottom: 14px;
+    padding-right: 36px;
   }
 }
 

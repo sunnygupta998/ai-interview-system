@@ -252,12 +252,12 @@ const CandidateDashboard = () => {
 
       {/* Skills Modal */}
       {selectedResume && (
-        <div className="modal-overlay" onClick={() => setSelectedResume(null)} style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.7)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div className="modal-content glass-card" onClick={e => e.stopPropagation()} style={{ width: '90%', maxWidth: '800px', maxHeight: '90vh', overflowY: 'auto', position: 'relative', padding: '2rem' }}>
-            <button onClick={() => setSelectedResume(null)} style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'transparent', border: 'none', color: 'white', fontSize: '1.5rem', cursor: 'pointer' }}>
+        <div className="skills-modal-overlay" onClick={() => setSelectedResume(null)}>
+          <div className="skills-modal-content glass-card animate-fade" onClick={e => e.stopPropagation()}>
+            <button className="skills-modal-close" onClick={() => setSelectedResume(null)} title="Close Modal">
               <FiX />
             </button>
-            <h2 style={{ marginBottom: '1.5rem' }}>Resume Analysis: {selectedResume.filename}</h2>
+            <h2 className="skills-modal-title">Resume Analysis: {selectedResume.filename}</h2>
             <SkillsRadar skillsAnalysis={selectedResume.skills_analysis} />
           </div>
         </div>
