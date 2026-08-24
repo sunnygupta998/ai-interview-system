@@ -9,7 +9,7 @@ def _get_gemini_model():
     if not api_key:
         return None
     genai.configure(api_key=api_key)
-    return genai.GenerativeModel('gemini-2.0-flash')
+    return genai.GenerativeModel('gemini-3.6-flash')
 
 def _get_groq_client():
     """Returns a configured Groq client, or None if key is missing."""
@@ -35,13 +35,13 @@ def _build_mcq_prompt(skills_analysis, settings, existing_questions=None):
     hard_count = questions_per_test - easy_count - medium_count
     
     skills_list = []
-    for skill in skills_analysis.get('skills', []):
+    for skill in skills_analysis.get('skills', [])[:15]:  # Limit to top 15 skills to control prompt size
         skills_list.append(f"{skill.get('name')} ({skill.get('proficiency', 'intermediate')})")
     
     skills_str = ", ".join(skills_list) if skills_list else "General Software Development"
     domain = skills_analysis.get('domain', 'Software Development')
     experience_years = skills_analysis.get('experience_years', 2)
-    suggested_topics = ", ".join(skills_analysis.get('suggested_topics', []))
+    suggested_topics = ", ".join(skills_analysis.get('suggested_topics', [])[:10])  # Limit topics
 
     # Build the exclusion clause if we have existing questions to avoid
     exclusion_clause = ""
